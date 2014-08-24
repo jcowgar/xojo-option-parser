@@ -1,0 +1,1129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RBProject version="2014r2.1" FormatVersion="2" MinIDEVersion="20070100">
+<block type="Module" ID="634229026">
+ <ObjName>OptionParser</ObjName>
+ <ObjContainerID>1881215597</ObjContainerID>
+ <IsClass>1</IsClass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <Method>
+  <ItemName>AddOption</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub AddOption(o As Option)</SourceLine>
+   <SourceLine>// Validation</SourceLine>
+   <SourceLine>If o.ShortKey &lt;&gt; "" And Dict.HasKey(o.ShortKey.Asc) Then</SourceLine>
+   <SourceLine>Raise New OptionParserException("You can't add the same short key more than once: " + o.ShortKey)</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>If o.LongKey &lt;&gt; "" And Dict.HasKey(o.LongKey) Then</SourceLine>
+   <SourceLine>Raise New OptionParserException("You can't add the same long key more than once: " + o.LongKey)</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>If o.ShortKey = "?" Then</SourceLine>
+   <SourceLine>Raise New OptionParserException("You can't add the key ""?"" This means ""help"" and has already been added for you")</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Options.Append o</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If o.ShortKey &lt;&gt; "" Then</SourceLine>
+   <SourceLine>Dict.Value(o.ShortKey.Asc) = o</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If o.LongKey &lt;&gt; "" Then</SourceLine>
+   <SourceLine>Dict.Value(o.LongKey) = o</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>o As Option</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Arguments</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Arguments() As String()</SourceLine>
+   <SourceLine>Return CopyStringArray(OriginalArgs)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String()</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>BooleanValue</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function BooleanValue(key As Variant, defaultValue As Boolean = False) As Boolean</SourceLine>
+   <SourceLine>Dim o As Option = OptionValue(key)</SourceLine>
+   <SourceLine>Return If(o Is Nil Or o.WasSet = False, defaultValue, o.Value.BooleanValue)</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>key As Variant, defaultValue As Boolean = False</ItemParams>
+  <ItemResult>Boolean</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor(appName As String = "", appDescription As String = "")</SourceLine>
+   <SourceLine>Dict = New Dictionary</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Self.AppName = If(appName = "", App.ExecutableFile.Name, appName)</SourceLine>
+   <SourceLine>Self.AppDescription = appDescription</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim helpOption As New Option("h", "help", "Show help", Option.OptionType.Boolean)</SourceLine>
+   <SourceLine>AddOption  helpOption</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>appName As String = "", appDescription As String = ""</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>CopyStringArray</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function CopyStringArray(arr() As String) As String()</SourceLine>
+   <SourceLine>Dim result() As String</SourceLine>
+   <SourceLine>If arr.Ubound = -1 Then Return result</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>ReDim result(arr.Ubound)</SourceLine>
+   <SourceLine>For i As Integer = 0 to arr.Ubound</SourceLine>
+   <SourceLine>result(i) = arr(i)</SourceLine>
+   <SourceLine>Next i</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return result</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>arr() As String</ItemParams>
+  <ItemResult>String()</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>DateValue</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function DateValue(key As Variant, defaultValue As Date = Nil) As Date</SourceLine>
+   <SourceLine>Dim v As Variant = Value(key)</SourceLine>
+   <SourceLine>Return If(v Is Nil, defaultValue, v.DateValue)</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>key As Variant, defaultValue As Date = Nil</ItemParams>
+  <ItemResult>Date</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>DoubleValue</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function DoubleValue(key As Variant, defaultValue As Double = 0.0) As Double</SourceLine>
+   <SourceLine>Dim v As Variant = Value(key)</SourceLine>
+   <SourceLine>Return If(v Is Nil, defaultValue, v.DoubleValue)</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>key As Variant, defaultValue As Double = 0.0</ItemParams>
+  <ItemResult>Double</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>ExpandArgs</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function ExpandArgs(args() As String) As String()</SourceLine>
+   <SourceLine>// Takes arguments that may be chained and expands them</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim expandedArgs() As String</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>For argIndex As Integer = 0 To args.Ubound</SourceLine>
+   <SourceLine>Dim arg As String = args(argIndex)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If arg = "--" Then</SourceLine>
+   <SourceLine>// Start of our "forced" extras</SourceLine>
+   <SourceLine>For i As Integer = argIndex To args.Ubound</SourceLine>
+   <SourceLine>expandedArgs.Append args(i)</SourceLine>
+   <SourceLine>Next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Exit For argIndex</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>ElseIf arg.Left(2) = "--" Then</SourceLine>
+   <SourceLine>expandedArgs.Append arg</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>ElseIf arg.Left(1) = "-" And arg.Len &gt; 2 Then</SourceLine>
+   <SourceLine>arg = arg.Mid(2) // Chop off the hyphen</SourceLine>
+   <SourceLine>Dim value As String</SourceLine>
+   <SourceLine>Dim equalIndex As Integer = arg.InStr(2, "=") // If they started the switch with "=", that doesn't count</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If equalIndex &lt;&gt; 0 Then</SourceLine>
+   <SourceLine>value = arg.Mid(equalIndex)</SourceLine>
+   <SourceLine>arg = arg.Left(equalIndex - 1)</SourceLine>
+   <SourceLine>End if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim switches() As String = arg.Split("")</SourceLine>
+   <SourceLine>Dim lastIndex As Integer = switches.Ubound - 1</SourceLine>
+   <SourceLine>For i As Integer = 0 To lastIndex</SourceLine>
+   <SourceLine>expandedArgs.Append "-" + switches(i)</SourceLine>
+   <SourceLine>Next i</SourceLine>
+   <SourceLine>expandedArgs.Append "-" + switches(switches.Ubound) + value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Else // Append as-is</SourceLine>
+   <SourceLine>expandedArgs.Append arg</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>Next argIndex</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return expandedArgs</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>args() As String</ItemParams>
+  <ItemResult>String()</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>FileValue</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function FileValue(key As Variant, defaultValue As FolderItem = Nil) As FolderItem</SourceLine>
+   <SourceLine>Dim v As Variant = Value(key)</SourceLine>
+   <SourceLine>Return If(v Is Nil, defaultValue, FolderItem(v))</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>key As Variant, defaultValue As FolderItem = Nil</ItemParams>
+  <ItemResult>FolderItem</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>IntegerValue</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function IntegerValue(key As Variant, defaultValue As Integer = 0) As Integer</SourceLine>
+   <SourceLine>Dim v As Variant = Value(key)</SourceLine>
+   <SourceLine>Return If(v Is Nil, defaultValue, v.IntegerValue)</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>key As Variant, defaultValue As Integer = 0</ItemParams>
+  <ItemResult>Integer</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>KeyWithDashes</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function KeyWithDashes(key As String) As String</SourceLine>
+   <SourceLine>// Takes a key and converts it back to its single or double-dash version</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>key = key.Trim</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If key = "" Then</SourceLine>
+   <SourceLine>Return ""</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>ElseIf key.Left(1) = "-" Then // Already there</SourceLine>
+   <SourceLine>Return key</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>ElseIf key.Len = 1 Then</SourceLine>
+   <SourceLine>Return "-" + key</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>Return "--" + key</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>key As String</ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>OptionValue</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function OptionValue(key As String) As Option</SourceLine>
+   <SourceLine>Dim lookupKey As Variant = key</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If Not Dict.HasKey(lookupKey) Then</SourceLine>
+   <SourceLine>If key.Len = 1 Then</SourceLine>
+   <SourceLine>lookupKey = key.Asc</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return Dict.Lookup(lookupKey, Nil)</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>key As String</ItemParams>
+  <ItemResult>Option</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>PadRight</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function PadRight(s as String, width as Integer, padding as String = " ") As String</SourceLine>
+   <SourceLine>// Pad a string to at least 'width' characters, by adding padding characters</SourceLine>
+   <SourceLine>// to the right side of the string.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim length as Integer</SourceLine>
+   <SourceLine>length = len(s)</SourceLine>
+   <SourceLine>if length &gt;= width then return s</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim mostToRepeat as Integer</SourceLine>
+   <SourceLine>mostToRepeat = ceil((width-length)/len(padding))</SourceLine>
+   <SourceLine>return s + mid(Repeat(padding, mostToRepeat),1,width-length)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>s as String, width as Integer, padding as String = " "</ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Parse</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Parse(args() As String)</SourceLine>
+   <SourceLine>OriginalArgs = CopyStringArray(args)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>args = ExpandArgs(args)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim restAreExtras As Boolean</SourceLine>
+   <SourceLine>Dim optIdx As Integer = -1</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>While optIdx &lt; args.Ubound // args can be rewritten in the loop</SourceLine>
+   <SourceLine>optIdx = optIdx + 1</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If restAreExtras Then</SourceLine>
+   <SourceLine>Extra.Append args(optIdx)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Continue</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim arg As String = args(optIdx)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If arg = "" Or arg = App.ExecutableFile.NativePath Then</SourceLine>
+   <SourceLine>Continue</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If arg = "--" Then</SourceLine>
+   <SourceLine>restAreExtras = True</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Continue</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim key As String</SourceLine>
+   <SourceLine>Dim value As String</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Special case:</SourceLine>
+   <SourceLine>// -? is a synonym for help</SourceLine>
+   <SourceLine>If arg.Left(2) = "-?" Then</SourceLine>
+   <SourceLine>arg = "-h" + arg.Mid(3)</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If arg.Left(2) = "--" Then</SourceLine>
+   <SourceLine>key = arg.Mid(3)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>ElseIf arg.Left(1) = "-" Then</SourceLine>
+   <SourceLine>key = arg.Mid(2)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>If arg &lt;&gt; "" Then</SourceLine>
+   <SourceLine>Extra.Append arg</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>Continue</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim equalIdx As Integer = key.InStr(2, "=") // Start at the second character</SourceLine>
+   <SourceLine>If equalIdx &lt;&gt; 0 Then</SourceLine>
+   <SourceLine>value = key.Mid(equalIdx + 1)</SourceLine>
+   <SourceLine>key = key.Left(equalIdx - 1)</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim opt As Option = OptionValue(key)</SourceLine>
+   <SourceLine>If opt = Nil Then</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Maybe the user has specified --no-option which should set a</SourceLine>
+   <SourceLine>// boolean value to False</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If key.Left(3) &lt;&gt; "no-" Then</SourceLine>
+   <SourceLine>RaiseUnrecognizedKeyException(key)</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>key = key.Mid(4)</SourceLine>
+   <SourceLine>opt = OptionValue(key)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If opt = Nil Or opt.Type &lt;&gt; Option.OptionType.Boolean Then</SourceLine>
+   <SourceLine>RaiseUnrecognizedKeyException(key)</SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>value = "No"</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If value &lt;&gt; "" Then</SourceLine>
+   <SourceLine>// We already got the value, ignore everything else in this If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>ElseIf opt.Type = Option.OptionType.Boolean Then</SourceLine>
+   <SourceLine>value = "Yes"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>ElseIf Not Self.HelpRequested Then</SourceLine>
+   <SourceLine>// This requires a parameter and the parameter value was not</SourceLine>
+   <SourceLine>// given as an = assignment, thus it must be the next argument</SourceLine>
+   <SourceLine>// But if help was requested, it doesn't matter, so we skip this.</SourceLine>
+   <SourceLine>// If a value was given next, it will just be added to Extras.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If optIdx = args.Ubound Then</SourceLine>
+   <SourceLine>RaiseInvalidKeyValueException(key, kMissingKeyValue)</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>optIdx = optIdx + 1</SourceLine>
+   <SourceLine>value = args(optIdx)</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>opt.HandleValue(value)</SourceLine>
+   <SourceLine>Wend</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Validate Parsed Values</SourceLine>
+   <SourceLine>// but only if help wasn't requested.</SourceLine>
+   <SourceLine>// If it was, all bets are off and up to the caller to validate.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If Not Self.HelpRequested Then</SourceLine>
+   <SourceLine>If ExtrasRequired &gt; 0 And Extra.Ubound &lt; (ExtrasRequired - 1) Then</SourceLine>
+   <SourceLine>Raise New OptionParserException("Insufficient extras specified")</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>For Each o As Option In Options</SourceLine>
+   <SourceLine>If Not o.IsValid Then</SourceLine>
+   <SourceLine>Dim key As String</SourceLine>
+   <SourceLine>If o.LongKey &lt;&gt; "" Then</SourceLine>
+   <SourceLine>key = o.LongKey</SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>key = o.ShortKey</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If o.IsRequired And o.Value = Nil Then</SourceLine>
+   <SourceLine>RaiseMissingKeyException(key)</SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>RaiseInvalidKeyValueException(key, kInvalidKeyValue + " '" + o.Value.StringValue + "'")</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>Next</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>args() As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Parse</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Parse(value As String)</SourceLine>
+   <SourceLine>Dim rx As New RegEx</SourceLine>
+   <SourceLine>rx.SearchPattern = "(""[^""]+""|[^\s""]+)"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim matches() As String</SourceLine>
+   <SourceLine>Dim match As RegExMatch = rx.Search(value)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>While match &lt;&gt; Nil</SourceLine>
+   <SourceLine>matches.Append ReplaceAll(match.SubExpressionString(1), chr(34), "")</SourceLine>
+   <SourceLine>match = rx.Search()</SourceLine>
+   <SourceLine>Wend</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Self.Parse(matches)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Code from Michel Bujardet (https://forum.xojo.com/14420-system-commandline)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>value As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>RaiseInvalidKeyValueException</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub RaiseInvalidKeyValueException(key As String, type As String)</SourceLine>
+   <SourceLine>Raise New OptionInvalidKeyValueException("Invalid key value: " + KeyWithDashes(key) + " (" + type + ")")</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>key As String, type As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>RaiseMissingKeyException</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub RaiseMissingKeyException(key As String)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Raise New OptionMissingKeyException("Missing option: " + KeyWithDashes(key))</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>key As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>RaiseUnrecognizedKeyException</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub RaiseUnrecognizedKeyException(key As String)</SourceLine>
+   <SourceLine>Raise New OptionUnrecognizedKeyException("Unrecognized key: " + KeyWithDashes(key))</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>key As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Repeat</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Repeat(s as String, repeatCount as Integer) As String</SourceLine>
+   <SourceLine>// Concatenate a string to itself 'repeatCount' times.</SourceLine>
+   <SourceLine>// Example: Repeat("spam ", 5) = "spam spam spam spam spam ".</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#pragma disablebackgroundTasks</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if repeatCount &lt;= 0 then return ""</SourceLine>
+   <SourceLine>if repeatCount = 1 then return s</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Implementation note: normally, you don't want to use string concatenation</SourceLine>
+   <SourceLine>// for something like this, since that creates a new string on each operation.</SourceLine>
+   <SourceLine>// But in this case, we can double the size of the string on iteration, which</SourceLine>
+   <SourceLine>// quickly reduces the overhead of concatenation to insignificance.  This method</SourceLine>
+   <SourceLine>// is faster than any other we've found (short of declares, which were only</SourceLine>
+   <SourceLine>// about 2X faster and were quite platform-specific).</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim desiredLenB As Integer = LenB(s) * repeatCount</SourceLine>
+   <SourceLine>dim output as String = s</SourceLine>
+   <SourceLine>dim cutoff as Integer = (desiredLenB+1)\2</SourceLine>
+   <SourceLine>dim curLenB as Integer = LenB(output)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>while curLenB &lt; cutoff</SourceLine>
+   <SourceLine>output = output + output</SourceLine>
+   <SourceLine>curLenB = curLenB + curLenB</SourceLine>
+   <SourceLine>wend</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>output = output + LeftB(output, desiredLenB - curLenB)</SourceLine>
+   <SourceLine>return output</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>s as String, repeatCount as Integer</ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>ShowHelp</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub ShowHelp(sectionTitle As String = "Help")</SourceLine>
+   <SourceLine>Const kAlignCol = 20</SourceLine>
+   <SourceLine>Const kLineLength = 72</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Static descIndent As String = kIndentPrefix + Repeat(" ", kAlignCol + 1)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim helpLines() As String</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim helpFor As String = AppName</SourceLine>
+   <SourceLine>If helpFor &lt;&gt; "" Then</SourceLine>
+   <SourceLine>If AppDescription &lt;&gt; "" Then</SourceLine>
+   <SourceLine>helpFor = kIndentPrefix + helpFor + " - " + AppDescription</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>helpLines.Append helpFor</SourceLine>
+   <SourceLine>helpLines.Append ""</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>helpLines.Append sectionTitle + ":"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>For i As Integer = 0 To Options.Ubound</SourceLine>
+   <SourceLine>Dim opt As Option = Options(i)</SourceLine>
+   <SourceLine>Dim keys() As String</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If opt.ShortKey &lt;&gt; "" Then</SourceLine>
+   <SourceLine>Dim keyString As String = KeyWithDashes(opt.ShortKey)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If opt.Type &lt;&gt; Option.OptionType.Boolean Then</SourceLine>
+   <SourceLine>keyString = keyString + " " + opt.TypeString</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>keys.Append keyString</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If opt.LongKey &lt;&gt; "" Then</SourceLine>
+   <SourceLine>Dim keyString As String = KeyWithDashes(opt.LongKey)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If opt.Type &lt;&gt; Option.OptionType.Boolean Then</SourceLine>
+   <SourceLine>keyString = keyString + "=" + opt.TypeString</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>keys.Append keyString</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim key As String = Join(keys, ", ")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If key.Len &gt; kAlignCol Or opt.Description.InStr(EndOfLine) &lt;&gt; 0 Then</SourceLine>
+   <SourceLine>helpLines.Append kIndentPrefix + key</SourceLine>
+   <SourceLine>helpLines.Append WrapTextWithIndent(opt.Description, kLineLength, descIndent)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>ElseIf (key.Len + opt.Description.Len) &gt; kLineLength Then</SourceLine>
+   <SourceLine>key = kIndentPrefix + PadRight(key, kAlignCol + 1)</SourceLine>
+   <SourceLine>Dim desc As String = WrapTextWithIndent(opt.Description, kLineLength, descIndent)</SourceLine>
+   <SourceLine>desc = desc.Mid(key.Len + 1)</SourceLine>
+   <SourceLine>helpLines.Append key + desc</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>helpLines.Append kIndentPrefix + PadRight(key, kAlignCol + 1) + opt.Description</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>Next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim notes As String = AdditionalHelpNotes.Trim</SourceLine>
+   <SourceLine>If notes &lt;&gt; "" Then</SourceLine>
+   <SourceLine>notes = WrapTextWithIndent(notes, kLineLength)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>helpLines.Append ""</SourceLine>
+   <SourceLine>helpLines.Append "Notes:"</SourceLine>
+   <SourceLine>helpLines.Append notes</SourceLine>
+   <SourceLine>helpLines.Append ""</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim help As String = Join(helpLines, EndOfLine)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#If TargetConsole Then</SourceLine>
+   <SourceLine>Print help</SourceLine>
+   <SourceLine>#ElseIf TargetHasGUI Then</SourceLine>
+   <SourceLine>MsgBox help</SourceLine>
+   <SourceLine>#Else</SourceLine>
+   <SourceLine>#Pragma Warning "How to print help?"</SourceLine>
+   <SourceLine>#EndIf</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>sectionTitle As String = "Help"</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>StringValue</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function StringValue(key As Variant, defaultValue As String = "") As String</SourceLine>
+   <SourceLine>Dim o As Option = OptionValue(key)</SourceLine>
+   <SourceLine>Return If(o Is Nil Or o.WasSet = False Or o.Value Is Nil, defaultValue, o.Value.StringValue)</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>key As Variant, defaultValue As String = ""</ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Value</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Value(key As Variant) As Variant</SourceLine>
+   <SourceLine>Dim vk As String = key</SourceLine>
+   <SourceLine>Dim v As Variant = Dict.Lookup(vk, Nil)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If v = Nil Then</SourceLine>
+   <SourceLine>v = Dict.Lookup(vk.Asc, Nil)</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If v &lt;&gt; Nil Then</SourceLine>
+   <SourceLine>Return Option(v).Value</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return Nil</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>key As Variant</ItemParams>
+  <ItemResult>Variant</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>WrapLines</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub WrapLines(lines() As String, charsPerLine As Integer = 72, paragraphFill As Boolean = true)</SourceLine>
+   <SourceLine>// Wrap the text so that no line is longer than charsPerLine.  If paragraphFill</SourceLine>
+   <SourceLine>// is true, then whenever one long line is followed by a line that does not</SourceLine>
+   <SourceLine>// start with whitespace, join them together into one continuous paragraph.</SourceLine>
+   <SourceLine>// Copied from StringUtils.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If UBound(lines) &lt; 0 Then Return</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Start by joining lines, if called for.</SourceLine>
+   <SourceLine>If paragraphFill Then</SourceLine>
+   <SourceLine>Dim lineNum As Integer = 1</SourceLine>
+   <SourceLine>Dim lastLineShort As Boolean = (lines(0).Len &lt; charsPerLine - 20)</SourceLine>
+   <SourceLine>While lineNum &lt;= UBound(lines)</SourceLine>
+   <SourceLine>Dim line As String = lines(lineNum)</SourceLine>
+   <SourceLine>Dim firstChar As String = Left(line, 1)</SourceLine>
+   <SourceLine>If lastLineShort Then</SourceLine>
+   <SourceLine>// last line was short, so don't join this one to it</SourceLine>
+   <SourceLine>lineNum = lineNum + 1</SourceLine>
+   <SourceLine>elseif line = "" or firstChar &lt;= " " or firstChar = "&gt;" or firstChar = "|" Then</SourceLine>
+   <SourceLine>// this line is empty or starts with whitespace or other special char; don't join it</SourceLine>
+   <SourceLine>lineNum = lineNum + 1</SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>// this line starts with a character; join it to the previous line</SourceLine>
+   <SourceLine>lines(lineNum - 1) = lines(lineNum - 1) + " " + line</SourceLine>
+   <SourceLine>lines.Remove lineNum</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>lastLineShort = (line.Len &lt; charsPerLine - 20)</SourceLine>
+   <SourceLine>Wend</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Then, go through and do the wrapping.</SourceLine>
+   <SourceLine>For lineNum As Integer = 0 To UBound(lines)</SourceLine>
+   <SourceLine>Dim line As String = RTrim(lines(lineNum))</SourceLine>
+   <SourceLine>If line.Len &lt;= charsPerLine Then</SourceLine>
+   <SourceLine>lines(lineNum) = line</SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>Dim breakPos As Integer</SourceLine>
+   <SourceLine>For breakPos = charsPerLine DownTo 1</SourceLine>
+   <SourceLine>Dim c As String = Mid(line, breakPos, 1)</SourceLine>
+   <SourceLine>If c &lt;= " " or c = "-" Then Exit</SourceLine>
+   <SourceLine>Next</SourceLine>
+   <SourceLine>If breakPos &lt; 2 Then breakPos = charsPerLine + 1 // no point breaking before char 1</SourceLine>
+   <SourceLine>lines.Insert lineNum + 1, LTrim(Mid(line, breakPos))</SourceLine>
+   <SourceLine>lines(lineNum) = LTrim(Left(line, breakPos - 1))</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>Next</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>lines() As String, charsPerLine As Integer = 72, paragraphFill As Boolean = true</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>WrapLinesWithIndent</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub WrapLinesWithIndent(lines() As String, charsPerLine As Integer, indent As String = kIndentPrefix)</SourceLine>
+   <SourceLine>WrapLines(lines, charsPerLine - indent.Len, False)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>For i As Integer = 0 To lines.Ubound</SourceLine>
+   <SourceLine>lines(i) = indent + lines(i)</SourceLine>
+   <SourceLine>Next i</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>lines() As String, charsPerLine As Integer, indent As String = kIndentPrefix</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>WrapTextWithIndent</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function WrapTextWithIndent(text As String, charsPerLine As Integer, indent As String = kIndentPrefix) As String</SourceLine>
+   <SourceLine>text = ReplaceLineEndings(text, EndOfLine)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim lines() As String = Split(text, EndOfLine)</SourceLine>
+   <SourceLine>WrapLinesWithIndent(lines, charsPerLine, indent)</SourceLine>
+   <SourceLine>Return Join(lines, EndOfLine)</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>text As String, charsPerLine As Integer, indent As String = kIndentPrefix</ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Property>
+  <ItemName>AdditionalHelpNotes</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>AdditionalHelpNotes As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>AdditionalHelpNotes As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>mAdditionalHelpNotes = ReplaceLineEndings(value.Trim, EndOfLine)</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>return mAdditionalHelpNotes</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>AppDescription</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>AppDescription As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>AppDescription As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>AppName</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>AppName As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>AppName As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>Dict</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Dict As Dictionary</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Dict As Dictionary</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>Extra()</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Extra() As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Extra() As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>ExtrasRequired</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>ExtrasRequired As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>ExtrasRequired As Integer = 0</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>HelpRequested</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>HelpRequested As Boolean</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>HelpRequested As Boolean</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Dim o As Option = OptionValue("help")</SourceLine>
+   <SourceLine>If o Is Nil Then</SourceLine>
+   <SourceLine>Return False // Should never happen</SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>Return o.WasSet</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mAdditionalHelpNotes</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mAdditionalHelpNotes As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mAdditionalHelpNotes As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>Options()</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Options() As Option</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Options() As Option</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>OriginalArgs()</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>OriginalArgs() As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>OriginalArgs() As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>AdditionalHelpNotes</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>AppDescription</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>AppName</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>ExtrasRequired</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>HelpRequested</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <PropertyValue>-2147483648</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+ </ViewBehavior>
+ <Constant>
+  <ItemName>kIndentPrefix</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>kIndentPrefix</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>&#32;&#32;</ItemDef>
+  <ItemFlags>33</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>kInvalidKeyValue</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>kInvalidKeyValue</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>key value is invalid</ItemDef>
+  <ItemFlags>33</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>kMissingKeyValue</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>kMissingKeyValue</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>key value is missing</ItemDef>
+  <ItemFlags>33</ItemFlags>
+ </Constant>
+</block>
+</RBProject>

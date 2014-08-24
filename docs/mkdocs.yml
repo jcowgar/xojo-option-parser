@@ -1,0 +1,17 @@
+site_name: OptionParser (API)
+site_description: Documentation for using OptionParser in Xojo
+copyright: Documentation built with <a href="https://github.com/jcowgar/xojodoc">XojoDoc</a> and formatted with <a href="http://mkdocs.org">mkdocs</a>.
+
+theme: mkdocs
+
+docs_dir: docs
+site_dir: publish
+
+pages:
+- ['index.md', 'Home']
+- ['OptionParser/OptionParser.md', 'OptionParser', 'OptionParser']
+- ['OptionParser/Option.md', 'OptionParser', 'Option']
+- ['OptionParser/OptionInvalidKeyValueException.md', 'OptionParser', 'OptionInvalidKeyValueException']
+- ['OptionParser/OptionParserException.md', 'OptionParser', 'OptionParserException']
+- ['OptionParser/OptionMissingKeyException.md', 'OptionParser', 'OptionMissingKeyException']
+- ['OptionParser/OptionUnrecognizedKeyException.md', 'OptionParser', 'OptionUnrecognizedKeyException']

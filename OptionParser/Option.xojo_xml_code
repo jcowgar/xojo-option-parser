@@ -14,6 +14,35 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Sub Constructor(shortKey As String, longKey As String, description As String, type As OptionType = OptionType.String)</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Construct a new `Option` for use with `OptionParser`. Provides most</SourceLine>
+   <SourceLine>// common attributes about an option as parameters. </SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Parameters</SourceLine>
+   <SourceLine>// * `shortKey` - Option's short key, can be blank</SourceLine>
+   <SourceLine>// * `longKey` - Option's long key, can be blank</SourceLine>
+   <SourceLine>// * `description` - Description of option used when display the help message</SourceLine>
+   <SourceLine>// * `type` - Type of this option, see `OptionType` enum</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Notes</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// While both `shortKey` and `longKey` are optional, one must be supplied. Further,</SourceLine>
+   <SourceLine>// `longKey` must be more than 1 character in length.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Example</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ```</SourceLine>
+   <SourceLine>// Dim opt As New OptionParser</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Dim o As Option</SourceLine>
+   <SourceLine>// o = New Option("", "name", "Name to say hello to")</SourceLine>
+   <SourceLine>// o.IsRequired = True</SourceLine>
+   <SourceLine>// opt.AddOption o</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// opt.AddOption New Option("", "count", "Number of times to say hello", Option.OptionType.Integer)</SourceLine>
+   <SourceLine>// ```</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>// Validate and cleanup</SourceLine>
    <SourceLine>shortKey = shortKey.Trim</SourceLine>
    <SourceLine>longKey = longKey.Trim</SourceLine>
@@ -127,7 +156,7 @@
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
+  <ItemFlags>33</ItemFlags>
   <IsShared>0</IsShared>
   <ItemParams>path As String, relativeTo As FolderItem = Nil</ItemParams>
   <ItemResult>FolderItem</ItemResult>
@@ -139,6 +168,14 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Sub HandleValue(value As String)</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// For internal `OptionParser` use.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Handles converting the `String` representation of an option as supplied</SourceLine>
+   <SourceLine>// by the user to the actual `OptionType`, for example, converts a `String`</SourceLine>
+   <SourceLine>// to an `Integer`, `Double`, `Date`, `Boolean`, `FolderItem`, etc...</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>Dim newValue As Variant</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Select Case Type</SourceLine>
@@ -200,6 +237,28 @@
   <ItemParams>value As String</ItemParams>
   <ItemResult></ItemResult>
  </Method>
+ <Note>
+  <ItemName>Enums</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <NoteLine>Enums</NoteLine>
+   <NoteLine>### OptionType</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>Represent a valid type of option.</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>* `String`</NoteLine>
+   <NoteLine>* `Integer` - Supplied value must be a valid number</NoteLine>
+   <NoteLine>* `Double` - Supplied value must be a valid number</NoteLine>
+   <NoteLine>* `Date` - Supplied value must pass `ParseDate()`</NoteLine>
+   <NoteLine>* `Boolean` - If supplied value is `""`, `"y"`, `"yes"`, `"t"`, `"true"`, `"on"`, `"1"` then it is considered `True`, otherwise `False`</NoteLine>
+   <NoteLine>* `File` - Represented by a `FolderItem`</NoteLine>
+   <NoteLine>* `Directory` - Represented by a `FolderItem`</NoteLine>
+   <NoteLine></NoteLine>
+  </ItemSource>
+  <ItemFlags>0</ItemFlags>
+ </Note>
  <Property>
   <ItemName>Description</ItemName>
   <Compatibility></Compatibility>
@@ -207,7 +266,7 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Description As String</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>Description that will appear in the application help for this option.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>Description As String</ItemDeclaration>
@@ -222,6 +281,23 @@
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>IsArray As Boolean</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>For example, say this option has `IsArray=True` and is `-i/--include`. On the command line one could:</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>```</SourceLine>
+   <SourceLine>$ myapp -i include -i project/include -i support/include abc.c</SourceLine>
+   <SourceLine>```</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>In code would look like:</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>```</SourceLine>
+   <SourceLine>Dim v() As Variant = optParser.ArrayValue("include")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Print v(0) // include</SourceLine>
+   <SourceLine>Print v(1) // project/include</SourceLine>
+   <SourceLine>Print v(2) // support/include</SourceLine>
+   <SourceLine>```</SourceLine>
+   <SourceLine>If True, this option will handle multiple values and store those values into an array, even if one or none.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>IsArray As Boolean</ItemDeclaration>
@@ -235,7 +311,13 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>IsReadableRequired As Boolean</SourceLine>
+   <SourceLine>When set to `True` validation will be done on a `OptionType.File` and `OptionType.Folder`</SourceLine>
+   <SourceLine>to ensure that it can be read from. If the validation fails a `OptionInvalidKeyValueException`</SourceLine>
+   <SourceLine>exception will be raised.</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>**NOTE:** This does not mean that the option is required. It simply means that if supplied, the</SourceLine>
+   <SourceLine>option needs to be readable. If you want to make sure that the option is both readable and</SourceLine>
+   <SourceLine>required, one should also set `IsRequired=True`.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>IsReadableRequired As Boolean</ItemDeclaration>
@@ -249,7 +331,8 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>IsRequired As Boolean</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>If set to `True`, this option will be required to be supplied at the command line. If it is not</SourceLine>
+   <SourceLine>supplied, a `OptionMissingKeyException` will be raised.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>IsRequired As Boolean</ItemDeclaration>
@@ -263,7 +346,8 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>IsValid As Boolean</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>Read-only property that one can check to ensure if the Option value is valid</SourceLine>
+   <SourceLine>or not.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>IsValid As Boolean</ItemDeclaration>
@@ -330,7 +414,12 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>IsValidDateRequired As Boolean</SourceLine>
+   <SourceLine>When set to `True` validation is performed on the supplied value to make sure it is a valid</SourceLine>
+   <SourceLine>date. If the validation fails a `OptionInvalidKeyValueException` exception will be raised.</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>**NOTE:** This does not mean that the option is required. It simply means that if supplied, the</SourceLine>
+   <SourceLine>option needs to be a valid date. If you want to make sure that the option is both a readable </SourceLine>
+   <SourceLine>date and required, one should also set `IsRequired=True`.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>IsValidDateRequired As Boolean</ItemDeclaration>
@@ -344,7 +433,13 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>IsWriteableRequired As Boolean</SourceLine>
+   <SourceLine>When set to `True` validation will be done on a `OptionType.File` and `OptionType.Folder`</SourceLine>
+   <SourceLine>to ensure that it can be written to. If the validation fails a `OptionInvalidKeyValueException`</SourceLine>
+   <SourceLine>exception will be raised.</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>**NOTE:** This does not mean that the option is required. It simply means that if supplied, the</SourceLine>
+   <SourceLine>option needs to be writeable. If you want to make sure that the option is both writeable and</SourceLine>
+   <SourceLine>required, one should also set `IsRequired=True`.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>IsWriteableRequired As Boolean</ItemDeclaration>
@@ -358,7 +453,19 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>LongKey As String</SourceLine>
+   <SourceLine>An option can have a short and long key. This is the long key. A key is what the user</SourceLine>
+   <SourceLine>supplies on the command line to supply a particular value to a given option.</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>For example, suppose you are writing a Hello World program and wish to accept a name</SourceLine>
+   <SourceLine>on the command line of who to say hello to. The long option name be "name" while the</SourceLine>
+   <SourceLine>short "n".</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>```</SourceLine>
+   <SourceLine>$ say-hello -n John</SourceLine>
+   <SourceLine>Hello John!</SourceLine>
+   <SourceLine>$ say-hello --name=John</SourceLine>
+   <SourceLine>Hello John!</SourceLine>
+   <SourceLine>```</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>LongKey As String</ItemDeclaration>
@@ -372,7 +479,11 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>MaximumNumber As Double</SourceLine>
+   <SourceLine>Set a maximum limit to an `Integer` or `Double` option type.</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>**NOTE:** This does not mean that the option is required. It simply means that if supplied, the</SourceLine>
+   <SourceLine>option needs to be no more than this. If you want to make sure that the option has a maximum value</SourceLine>
+   <SourceLine>and is required, one should also set `IsRequired=True`.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>MaximumNumber As Double = kNumberNotSet</ItemDeclaration>
@@ -386,7 +497,11 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>MinimumNumber As Double</SourceLine>
+   <SourceLine>Set a minimum limit to an `Integer` or `Double` option type.</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>**NOTE:** This does not mean that the option is required. It simply means that if supplied, the</SourceLine>
+   <SourceLine>option needs to be no less than this. If you want to make sure that the option has a minimum value</SourceLine>
+   <SourceLine>and is required, one should also set `IsRequired=True`.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>MinimumNumber As Double = kNumberNotSet</ItemDeclaration>
@@ -400,7 +515,19 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>ShortKey As String</SourceLine>
+   <SourceLine>An option can have a short and long key. This is the short key. A key is what the user</SourceLine>
+   <SourceLine>supplies on the command line to supply a particular value to a given option.</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>For example, suppose you are writing a Hello World program and wish to accept a name</SourceLine>
+   <SourceLine>on the command line of who to say hello to. The long option name be "name" while the</SourceLine>
+   <SourceLine>short "n".</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>```</SourceLine>
+   <SourceLine>$ say-hello -n John</SourceLine>
+   <SourceLine>Hello John!</SourceLine>
+   <SourceLine>$ say-hello --name=John</SourceLine>
+   <SourceLine>Hello John!</SourceLine>
+   <SourceLine>```</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>ShortKey As String</ItemDeclaration>
@@ -414,7 +541,9 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Type As OptionType</SourceLine>
+   <SourceLine>Get or Set what type of option this is.</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>Please see the `OptionType` enum for more information.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>Type As OptionType</ItemDeclaration>
@@ -428,7 +557,7 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>TypeString As String</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>Retrieve a `String` representation of the enum `OptionType` associated with this option.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>TypeString As String</ItemDeclaration>
@@ -475,7 +604,7 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Value As Variant</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>Get or set the user supplied value of this option.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>Value As Variant</ItemDeclaration>
@@ -489,7 +618,9 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>WasSet As Boolean</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>If the option was supplied on the command line, `WasSet` will return True. Otherwise</SourceLine>
+   <SourceLine>it will return `False`. This can be used to determine if a default value should be</SourceLine>
+   <SourceLine>used or maybe further user prompting.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>WasSet As Boolean</ItemDeclaration>
@@ -610,7 +741,7 @@
   <ItemName>kNone</ItemName>
   <ItemType>0</ItemType>
   <ItemDef></ItemDef>
-  <ItemFlags>0</ItemFlags>
+  <ItemFlags>33</ItemFlags>
  </Constant>
  <Constant>
   <ItemName>kNumberNotSet</ItemName>

@@ -14,6 +14,16 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Sub AddOption(o As Option)</SourceLine>
+   <SourceLine>// Add an option to the parser.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Parameters</SourceLine>
+   <SourceLine>// * `o` - `Option` to add</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Exceptions</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// `OptionParserException` can be thrown if one attempts to add an option with the same</SourceLine>
+   <SourceLine>// short or long key as an existing option.</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>// Validation</SourceLine>
    <SourceLine>If o.ShortKey &lt;&gt; "" And Dict.HasKey(o.ShortKey.Asc) Then</SourceLine>
    <SourceLine>Raise New OptionParserException("You can't add the same short key more than once: " + o.ShortKey)</SourceLine>
@@ -50,6 +60,9 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function Arguments() As String()</SourceLine>
+   <SourceLine>// Get the original arguments passed to the `OptionParser` as</SourceLine>
+   <SourceLine>// a `String` array.</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>Return CopyStringArray(OriginalArgs)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>End Function</SourceLine>
@@ -68,6 +81,20 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function BooleanValue(key As Variant, defaultValue As Boolean = False) As Boolean</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Retrieve the contents of an option as a `Boolean` value.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Parameters</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// * `key` - Key of the option to retrieve. This can be the short or long key. Convention</SourceLine>
+   <SourceLine>//   is to use the long key if available as it produces more readable code.</SourceLine>
+   <SourceLine>// * `defaultValue` - Value to return if the user did not supply this option.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Notes</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// The option type must be that of `OptionType.Boolean`.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>Dim o As Option = OptionValue(key)</SourceLine>
    <SourceLine>Return If(o Is Nil Or o.WasSet = False, defaultValue, o.Value.BooleanValue)</SourceLine>
    <SourceLine>End Function</SourceLine>
@@ -86,6 +113,23 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Sub Constructor(appName As String = "", appDescription As String = "")</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Construct a new `OptionParser`</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Parameters</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// * `appName` - Name of the application to display when showing help.</SourceLine>
+   <SourceLine>// * `appDescription` - Description of the application to display when showing help.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// For more inforation on the parameters, see the two properties `AppName` and `AppDescription`.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Notes</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// When creating a new `OptionParser` the "Help" option is added automatically. The "Help"</SourceLine>
+   <SourceLine>// option uses the short key `h` and the long key `help`, thus they can not be used by</SourceLine>
+   <SourceLine>// the application.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>Dict = New Dictionary</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Self.AppName = If(appName = "", App.ExecutableFile.Name, appName)</SourceLine>
@@ -136,6 +180,30 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function DateValue(key As Variant, defaultValue As Date = Nil) As Date</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Retrieve the contents of an option as a `Date` value.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Parameters</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// * `key` - Key of the option to retrieve. This can be the short or long key. Convention</SourceLine>
+   <SourceLine>//   is to use the long key if available as it produces more readable code.</SourceLine>
+   <SourceLine>// * `defaultValue` - Value to return if the user did not supply this option.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Notes</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// The option type must be that of `OptionType.Date`.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// **WARNING**:</SourceLine>
+   <SourceLine>// If the `Option.IsValidDateRequired` is set to `True` then the value supplied must</SourceLine>
+   <SourceLine>// pass the test of `ParseDate()`. If, however, `Option.IsValidDateRequired` is</SourceLine>
+   <SourceLine>// set to `False` and `ParseDate()` can not handle the date properly, the value is</SourceLine>
+   <SourceLine>// recorded as a `String` not a `Date`.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// This behavior is likely to change in the future. If one requests the type be a</SourceLine>
+   <SourceLine>// valid date, then the value will have to pass as a valid date or a `OptionInvalidKeyValueException`</SourceLine>
+   <SourceLine>// will be raised to indicate that an invalid option value has been supplied.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>Dim v As Variant = Value(key)</SourceLine>
    <SourceLine>Return If(v Is Nil, defaultValue, v.DateValue)</SourceLine>
    <SourceLine>End Function</SourceLine>
@@ -154,6 +222,20 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function DoubleValue(key As Variant, defaultValue As Double = 0.0) As Double</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Retrieve the contents of an option as a `Double` value.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Parameters</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// * `key` - Key of the option to retrieve. This can be the short or long key. Convention</SourceLine>
+   <SourceLine>//   is to use the long key if available as it produces more readable code.</SourceLine>
+   <SourceLine>// * `defaultValue` - Value to return if the user did not supply this option.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Notes</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// The option type must be that of `OptionType.Double`.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>Dim v As Variant = Value(key)</SourceLine>
    <SourceLine>Return If(v Is Nil, defaultValue, v.DoubleValue)</SourceLine>
    <SourceLine>End Function</SourceLine>
@@ -230,6 +312,23 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function FileValue(key As Variant, defaultValue As FolderItem = Nil) As FolderItem</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Retrieve the contents of an option as a `FolderItem` value.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Parameters</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// * `key` - Key of the option to retrieve. This can be the short or long key. Convention</SourceLine>
+   <SourceLine>//   is to use the long key if available as it produces more readable code.</SourceLine>
+   <SourceLine>// * `defaultValue` - Value to return if the user did not supply this option.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Notes</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// The option type must be that of `OptionType.File` or `OptionType.Folder`.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// **WARNING**:</SourceLine>
+   <SourceLine>// This will likely be renamed to `FolderItemValue` in the future.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>Dim v As Variant = Value(key)</SourceLine>
    <SourceLine>Return If(v Is Nil, defaultValue, FolderItem(v))</SourceLine>
    <SourceLine>End Function</SourceLine>
@@ -248,6 +347,20 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function IntegerValue(key As Variant, defaultValue As Integer = 0) As Integer</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Retrieve the contents of an option as a `Integer` value.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Parameters</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// * `key` - Key of the option to retrieve. This can be the short or long key. Convention</SourceLine>
+   <SourceLine>//   is to use the long key if available as it produces more readable code.</SourceLine>
+   <SourceLine>// * `defaultValue` - Value to return if the user did not supply this option.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Notes</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// The option type must be that of `OptionType.Integer`.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>Dim v As Variant = Value(key)</SourceLine>
    <SourceLine>Return If(v Is Nil, defaultValue, v.IntegerValue)</SourceLine>
    <SourceLine>End Function</SourceLine>
@@ -300,6 +413,22 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function OptionValue(key As String) As Option</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Retrieve the actual `Option` object associated with the `key`.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Parameters</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// * `key` - Key of the option to retrieve. This can be the short or long key. Convention</SourceLine>
+   <SourceLine>//   is to use the long key if available as it produces more readable code.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Notes</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Once `Parse` has been called, changing parameters in the `Option` object will</SourceLine>
+   <SourceLine>// have no bearing or change.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// One can use this to check the `WasSet` property of the `Option` class.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>Dim lookupKey As Variant = key</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>If Not Dict.HasKey(lookupKey) Then</SourceLine>
@@ -352,6 +481,24 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Sub Parse(args() As String)</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Parse the arguments</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Parameters</SourceLine>
+   <SourceLine>// </SourceLine>
+   <SourceLine>// * `args()` - Command line arguments already split into an array. Generally this will be used</SourceLine>
+   <SourceLine>//   with a `ConsoleApplication` since it's `Run` event passes in command line parameters this way.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Exceptions</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// * `OptionUnrecognizedKeyException` can be raised in the event an invalid argument is supplied.</SourceLine>
+   <SourceLine>//    For example, the user types `myprog --coun=12` when it should have been `--count=12`.</SourceLine>
+   <SourceLine>// * `OptionInvalidKeyValueException` can be raised in the event a valid argument is supplied with</SourceLine>
+   <SourceLine>//   an invalid value. For example `--count=John` where `count` was suppose to be an `Integer`.</SourceLine>
+   <SourceLine>// * `OptionParserException` can be raised in the event that the application expects at least X</SourceLine>
+   <SourceLine>//   extra items but the user did not supply at least X extra items.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>OriginalArgs = CopyStringArray(args)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>args = ExpandArgs(args)</SourceLine>
@@ -496,6 +643,22 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Sub Parse(value As String)</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Parse the arguments into a `String` array of parameters, then pass the contents of that</SourceLine>
+   <SourceLine>// array to the 'real' `Parse(args() As String)` method.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Parameters</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// * `value` - Command line arguments contained in a single line string. This is most often</SourceLine>
+   <SourceLine>//   used in a Desktop or Web application via a call to `System.CommandLine` as a Desktop</SourceLine>
+   <SourceLine>//   and Web application has no direct access to the `args()` parameter that a `ConsoleApplication`</SourceLine>
+   <SourceLine>//   does.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Notes</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// See `Parse(args() As String)` for more detailed information</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>Dim rx As New RegEx</SourceLine>
    <SourceLine>rx.SearchPattern = "(""[^""]+""|[^\s""]+)"</SourceLine>
    <SourceLine></SourceLine>
@@ -623,6 +786,31 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Sub ShowHelp(sectionTitle As String = "Help")</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Display a nicely formatted help message including various pieces of meta</SourceLine>
+   <SourceLine>// data such as `AppName`, `AppDescription` and `AdditionalHelpNotes`. Mixed</SourceLine>
+   <SourceLine>// in there are of course all of the possible options with their short and long</SourceLine>
+   <SourceLine>// keys, value types (if any) and description</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Parameters</SourceLine>
+   <SourceLine>// * `sectionTitle` - One can overide the section title in case they have multiple</SourceLine>
+   <SourceLine>//   help screen outputs or have utilized more than one `OptionParser` for some</SourceLine>
+   <SourceLine>//   advanced techniques.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Notes</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Right now there is not a nice GUI for displaying the command line help for</SourceLine>
+   <SourceLine>// a GUI application or a Web application.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// * For a console application, the output is `Print` to the screen.</SourceLine>
+   <SourceLine>// * For a GUI application, the output is given to `MsgBox`</SourceLine>
+   <SourceLine>// * For a Web application, help is not currently displayed.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// **WARNING**: It is likely that for console applications the call to `Print`</SourceLine>
+   <SourceLine>// will changes to `StdErr.Write` instead.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>Const kAlignCol = 20</SourceLine>
    <SourceLine>Const kLineLength = 72</SourceLine>
    <SourceLine></SourceLine>
@@ -719,6 +907,20 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function StringValue(key As Variant, defaultValue As String = "") As String</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Retrieve the contents of an option as a `String` value.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Parameters</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// * `key` - Key of the option to retrieve. This can be the short or long key. Convention</SourceLine>
+   <SourceLine>//   is to use the long key if available as it produces more readable code.</SourceLine>
+   <SourceLine>// * `defaultValue` - Value to return if the user did not supply this option.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Notes</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// The option type must be that of `OptionType.String`.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>Dim o As Option = OptionValue(key)</SourceLine>
    <SourceLine>Return If(o Is Nil Or o.WasSet = False Or o.Value Is Nil, defaultValue, o.Value.StringValue)</SourceLine>
    <SourceLine>End Function</SourceLine>
@@ -861,6 +1063,108 @@
   <ItemParams>text As String, charsPerLine As Integer, indent As String = kIndentPrefix</ItemParams>
   <ItemResult>String</ItemResult>
  </Method>
+ <Method>
+  <ItemName>ArrayValue</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function ArrayValue(key As Variant) As Variant()</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Retrieve the contents of an option as a `Variant` array. The contents</SourceLine>
+   <SourceLine>// of the array are of course a `Variant` however the actual value assigned to the</SourceLine>
+   <SourceLine>// `Variant` is that of the options `OptionType`. For example, if this option is</SourceLine>
+   <SourceLine>// of the `OptionType.Integer` value, then the resulting array will be an array</SourceLine>
+   <SourceLine>// containing parsed `Integer` values from the command line. The same is true for</SourceLine>
+   <SourceLine>// any of the `OptionType` values.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Parameters</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// * `key` - Key of the option to retrieve. This can be the short or long key. Convention</SourceLine>
+   <SourceLine>//   is to use the long key if available as it produces more readable code.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// ### Notes</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// The option needs to have the `IsArray` property set to `True` to utilize this method.</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim v() As Variant</SourceLine>
+   <SourceLine>Dim o As Option = OptionValue(key)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If Not (o Is Nil) Then</SourceLine>
+   <SourceLine>v = o.Value</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return v</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>key As Variant</ItemParams>
+  <ItemResult>Variant()</ItemResult>
+ </Method>
+ <Note>
+  <ItemName>Overview</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <NoteLine>Overview</NoteLine>
+   <NoteLine>`OptionParser` is the glue between `Option` classes and the command line as supplied via</NoteLine>
+   <NoteLine>the `Run` event's `args()` parameter in a `ConsoleApplication` or via a call to </NoteLine>
+   <NoteLine>`System.CommandLine` in a Desktop or Web application. It handles actually parsing the</NoteLine>
+   <NoteLine>command line, populating the associated `Option`s and validating it as a whole.</NoteLine>
+  </ItemSource>
+  <ItemFlags>0</ItemFlags>
+ </Note>
+ <Note>
+  <ItemName>How to supply command line parameters</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <NoteLine>How to supply command line parameters</NoteLine>
+   <NoteLine>`OptionParser` is versitle on it's use of command line options.</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>* Options can appear anywhere on the command line</NoteLine>
+   <NoteLine>* Extra can be at the start, middle or end of the command line</NoteLine>
+   <NoteLine>* Short options can be combined</NoteLine>
+   <NoteLine>* Long options with assignment utilize the equal sign (`=`)</NoteLine>
+   <NoteLine>* Short options can optionally use the `=` sign</NoteLine>
+   <NoteLine>* File and Directory options can be a full or relative path</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>Here are some example uses at the command line:</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>```</NoteLine>
+   <NoteLine># Options for a fictitious copy program</NoteLine>
+   <NoteLine>#</NoteLine>
+   <NoteLine># -r/--recursive</NoteLine>
+   <NoteLine># -v/--verbose</NoteLine>
+   <NoteLine># -l/--log FILE</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine># copy the $HOME/Desktop/Folder to /tmp recursively with verbose turned on</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>$ cp -rv ~/Desktop/Folder /tmp</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine># same thing</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>$ cp ~/Desktop/Folder -r /tmp -v</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine># enable logging to a file</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>$ cp -rv --log=file.txt ~/Desktop/Folder /tmp</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine># enable logging to a file using combined short options </NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>$ cp -rvl=file.txt ~/Desktop/Folder /tmp</NoteLine>
+   <NoteLine>```</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine></NoteLine>
+  </ItemSource>
+  <ItemFlags>0</ItemFlags>
+ </Note>
  <Property>
   <ItemName>AdditionalHelpNotes</ItemName>
   <Compatibility></Compatibility>
@@ -868,6 +1172,11 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>AdditionalHelpNotes As String</SourceLine>
+   <SourceLine>Displayed after the help message generated by `OptionParser` when the</SourceLine>
+   <SourceLine>help screen is shown.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>This can be used to provide further usage notes and to expand on options</SourceLine>
+   <SourceLine>when a single line description is not sufficient.</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -894,6 +1203,8 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>AppDescription As String</SourceLine>
+   <SourceLine>Typically a single line description of the application that is displayed</SourceLine>
+   <SourceLine>before the application help.</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -908,7 +1219,9 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>AppName As String</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>Name of the application. If empty, `OptionParser` will assign the `AppName`</SourceLine>
+   <SourceLine>variable to the name of the executable filename. This is displayed when </SourceLine>
+   <SourceLine>user help is shown.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>AppName As String</ItemDeclaration>
@@ -936,7 +1249,21 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Extra() As String</SourceLine>
+   <SourceLine>Any non-option parameters given to the application will be appended</SourceLine>
+   <SourceLine>to this array. For example:</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>```</SourceLine>
+   <SourceLine>$ my-app --verbose -o ./docs file.txt file2.txt file3.txt</SourceLine>
+   <SourceLine>```</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>In the above case, the `Extras` array will contain three</SourceLine>
+   <SourceLine>strings:</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>```</SourceLine>
+   <SourceLine>0 = "file.txt"</SourceLine>
+   <SourceLine>1 = "file2.txt"</SourceLine>
+   <SourceLine>2 = "file3.txt"</SourceLine>
+   <SourceLine>```</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>Extra() As String</ItemDeclaration>
@@ -950,7 +1277,14 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>ExtrasRequired As Integer</SourceLine>
+   <SourceLine>Specify the minimum number of extra items required. For example, say you are</SourceLine>
+   <SourceLine>writing a copy program. One might set this value to `2`.</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>```</SourceLine>
+   <SourceLine>$ copy extra1 extra2</SourceLine>
+   <SourceLine>```</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>See `Extra` for more information.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>ExtrasRequired As Integer = 0</ItemDeclaration>
@@ -964,7 +1298,7 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>HelpRequested As Boolean</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>`True` when the user supplies either `-h` or `--help` on the command line.</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <ItemDeclaration>HelpRequested As Boolean</ItemDeclaration>

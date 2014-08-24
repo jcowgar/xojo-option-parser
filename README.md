@@ -9,6 +9,16 @@ types:
 2. Console
 3. Web
 
+Downloading
+-----------
+
+To download the latest release of `OptionParser` visit the
+[Releases](https://github.com/jcowgar/xojo-option-parser/releases) page on GitHub.
+
+To download the latest bleeding edge development version, please fork/clone the
+GitHub repository [xojo-option-parser](https://github.com/jcowgar/xojo-option-parser).
+
+
 Getting Started
 ---------------
 

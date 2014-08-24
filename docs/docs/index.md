@@ -9,6 +9,15 @@ types:
 2. Console
 3. Web
 
+Downloading
+-----------
+
+To download the latest release of `OptionParser` visit the
+[Releases](https://github.com/jcowgar/xojo-option-parser/releases) page on GitHub.
+
+To download the latest bleeding edge development version, please fork/clone the
+GitHub repository [xojo-option-parser](https://github.com/jcowgar/xojo-option-parser).
+
 Getting Started
 ---------------
 
@@ -40,4 +49,3 @@ When using `OptionParser` in your own applications, if you run into a bug:
    [github/jcowgar/xojo-option-parser/fork](https://github.com/jcowgar/xojo-option-parser/fork).
 3. Best, fork the repo, add a unit test exposing the bug, fix the bug,
    and then submit a pull request (see #2).
-   

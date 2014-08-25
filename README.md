@@ -15,7 +15,7 @@ http://jcowgar.github.io/xojo-option-parser/
 License
 -------
 
-`xojo-option-parser` is licenses as LGPL v3.0. This basically means you can use the
+`xojo-option-parser` is licensed as LGPL v3.0. This basically means you can use the
 OptionParser in Open Source, Closed Source and Commercial applications free of
 charge. You are free to fork the library, make your own library, do whatever but the
 resulting library must remain open source.

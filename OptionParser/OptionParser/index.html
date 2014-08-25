@@ -158,6 +158,9 @@ command line, populating the associated <code>Option</code>s and validating it a
 <li>Long options with assignment utilize the equal sign (<code>=</code>)</li>
 <li>Short options can optionally use the <code>=</code> sign</li>
 <li>File and Directory options can be a full or relative path</li>
+<li>Anything after a <code>--</code> is considered an extra even if it looks like a parameter</li>
+<li>Boolean options can be prefixed with no, --recursive or --no-recursive, it'll
+  just do the right thing.</li>
 </ul>
 <p>Here are some example uses at the command line:</p>
 <pre class="prettyprint well"><code># Options for a fictitious copy program
@@ -181,6 +184,10 @@ $ cp -rv --log=file.txt ~/Desktop/Folder /tmp
 # enable logging to a file using combined short options 
 
 $ cp -rvl=file.txt ~/Desktop/Folder /tmp
+
+# disable verbose and copy a file named &quot;-r&quot; to &quot;tmp.txt&quot;
+
+$ cp --no-verbose -- -r tmp.txt
 </code></pre>
 
 <h2 id="properties">Properties</h2>

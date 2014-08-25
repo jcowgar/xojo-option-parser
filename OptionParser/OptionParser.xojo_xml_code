@@ -1134,6 +1134,9 @@
    <NoteLine>* Long options with assignment utilize the equal sign (`=`)</NoteLine>
    <NoteLine>* Short options can optionally use the `=` sign</NoteLine>
    <NoteLine>* File and Directory options can be a full or relative path</NoteLine>
+   <NoteLine>* Anything after a `--` is considered an extra even if it looks like a parameter</NoteLine>
+   <NoteLine>* Boolean options can be prefixed with no, --recursive or --no-recursive, it'll</NoteLine>
+   <NoteLine>  just do the right thing.</NoteLine>
    <NoteLine></NoteLine>
    <NoteLine>Here are some example uses at the command line:</NoteLine>
    <NoteLine></NoteLine>
@@ -1159,9 +1162,11 @@
    <NoteLine># enable logging to a file using combined short options </NoteLine>
    <NoteLine></NoteLine>
    <NoteLine>$ cp -rvl=file.txt ~/Desktop/Folder /tmp</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine># disable verbose and copy a file named "-r" to "tmp.txt"</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>$ cp --no-verbose -- -r tmp.txt</NoteLine>
    <NoteLine>```</NoteLine>
-   <NoteLine></NoteLine>
-   <NoteLine></NoteLine>
   </ItemSource>
   <ItemFlags>0</ItemFlags>
  </Note>

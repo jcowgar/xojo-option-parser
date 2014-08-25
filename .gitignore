@@ -1,3 +1,4 @@
 docs
 */*.debug
 *.xojo_uistate
+*obsolete*

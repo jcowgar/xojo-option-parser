@@ -169,11 +169,13 @@ Inherits TestGroup
 		  
 		  Dim caughtError As Boolean = False
 		  
+		  #Pragma BreakOnExceptions False
 		  Try
 		    o.Parse(Array("--date=john"))
 		  Catch RuntimeException
 		    caughtError = True
 		  End Try
+		  #Pragma BreakOnExceptions True
 		  
 		  Assert.IsTrue(caughtError, "did date validation fail?")
 		  
@@ -185,21 +187,25 @@ Inherits TestGroup
 		  
 		  caughtError = False
 		  
+		  #Pragma BreakOnExceptions False
 		  Try
 		    o.Parse(Array("--int=3"))
 		  Catch RuntimeException
 		    caughtError = True
 		  End Try
+		  #Pragma BreakOnExceptions True
 		  
 		  Assert.IsTrue(caughtError, "did integer validation fail?")
 		  
 		  caughtError = False
 		  
+		  #Pragma BreakOnExceptions False
 		  Try
 		    o.AddOption New Option("", "", "no keys", Option.OptionType.Boolean)
 		  Catch
 		    caughtError = True
 		  End Try
+		  #Pragma BreakOnExceptions True
 		  
 		  Assert.IsTrue(caughtError, "supplying no keys did not fail.")
 		  

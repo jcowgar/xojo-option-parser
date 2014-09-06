@@ -1105,6 +1105,109 @@
   <ItemParams>key As Variant</ItemParams>
   <ItemResult>Variant()</ItemResult>
  </Method>
+ <Method>
+  <ItemName>AutoParse</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Sub AutoParse(args() As String, o As Object, appName As String = "", appDescription As String = "")</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Parse `args()` and populate `o` utilizing Introspection</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim p As New OptionParser(appName, appDescription)</SourceLine>
+   <SourceLine>Dim ti As Introspection.TypeInfo = Introspection.GetType(o)</SourceLine>
+   <SourceLine>Dim props() As Pair</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>For Each prop As Introspection.PropertyInfo In ti.GetProperties</SourceLine>
+   <SourceLine>If prop.CanRead And prop.CanWrite And prop.IsPublic Then</SourceLine>
+   <SourceLine>Dim shortKey As String</SourceLine>
+   <SourceLine>Dim longKey As String</SourceLine>
+   <SourceLine>Dim description As String</SourceLine>
+   <SourceLine>Dim typeHint As String</SourceLine>
+   <SourceLine>Dim type As Option.OptionType</SourceLine>
+   <SourceLine>Dim required As Boolean</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>For Each attr As Introspection.AttributeInfo In prop.GetAttributes</SourceLine>
+   <SourceLine>Select Case attr.Name</SourceLine>
+   <SourceLine>Case "OptionShort"</SourceLine>
+   <SourceLine>shortKey = attr.Value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Case "OptionLong"</SourceLine>
+   <SourceLine>longKey = attr.Value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Case "OptionDescription"</SourceLine>
+   <SourceLine>description = attr.Value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Case "OptionType"</SourceLine>
+   <SourceLine>typeHint = attr.Value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Case "OptionRequired"</SourceLine>
+   <SourceLine>required = True</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Case "OptionSkip"</SourceLine>
+   <SourceLine>Continue For prop</SourceLine>
+   <SourceLine>End Select</SourceLine>
+   <SourceLine>Next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Select Case prop.PropertyType.Name</SourceLine>
+   <SourceLine>Case "String"</SourceLine>
+   <SourceLine>type = Option.OptionType.String</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Case "Integer", "Int32", "Int64"</SourceLine>
+   <SourceLine>type = Option.OptionType.Integer</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Case "Double"</SourceLine>
+   <SourceLine>type = Option.OptionType.Double</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Case "Boolean"</SourceLine>
+   <SourceLine>type = Option.OptionType.Boolean</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Case "FolderItem"</SourceLine>
+   <SourceLine>Select Case typeHint</SourceLine>
+   <SourceLine>Case "File"</SourceLine>
+   <SourceLine>type = Option.OptionType.File</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Case "Directory"</SourceLine>
+   <SourceLine>type = Option.OptionType.Directory</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Case Else</SourceLine>
+   <SourceLine>Raise New OptionParserException(prop.Name + " needs to have a OptionType set, unknown if it should be File or Directory")</SourceLine>
+   <SourceLine>End Select</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Case Else</SourceLine>
+   <SourceLine>Raise New OptionParserException("Unknown option type found in AutoParse, " + _</SourceLine>
+   <SourceLine>" property: " + prop.Name + " type: " + prop.PropertyType.Name)</SourceLine>
+   <SourceLine>End Select</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim opt As New Option(shortKey, longKey, description, type)</SourceLine>
+   <SourceLine>opt.IsRequired = required</SourceLine>
+   <SourceLine>p.AddOption opt</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>props.Append opt : prop</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>Next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>p.Parse(args)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>For Each propPair As Pair In props</SourceLine>
+   <SourceLine>Dim opt As Option = propPair.Left</SourceLine>
+   <SourceLine>Dim prop As Introspection.PropertyInfo = propPair.Right</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If opt.WasSet Then</SourceLine>
+   <SourceLine>prop.Value(o) = opt.Value</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>Next</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>args() As String, o As Object, appName As String = "", appDescription As String = ""</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
  <Note>
   <ItemName>Overview</ItemName>
   <Compatibility></Compatibility>

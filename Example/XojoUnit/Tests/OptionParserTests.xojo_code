@@ -2,6 +2,17 @@
 Protected Class OptionParserTests
 Inherits TestGroup
 	#tag Method, Flags = &h0
+		Sub AutoParseTest()
+		  Dim opts As New SampleOptions
+		  
+		  OptionParser.AutoParse(Array("-c", "10", "--name=John"), opts)
+		  
+		  Assert.AreEqual("John", opts.Name)
+		  Assert.AreEqual(10, opts.Count)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub LongKeyNoBooleanTest()
 		  Dim o As New OptionParser("app", "desc")
 		  

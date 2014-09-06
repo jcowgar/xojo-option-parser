@@ -1,7 +1,7 @@
 #tag Class
 Protected Class SampleOptions
 	#tag Property, Flags = &h0
-		Attributes( OptionShort = "c", OptionLong = "count", OptionDescription = "Number of times to say hello to person", OptionDefault = 1 ) Count As Integer
+		Attributes( OptionShort = "c", OptionLong = "count", OptionDescription = "Number of times to say hello to person" ) Count As Integer
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

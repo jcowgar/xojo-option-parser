@@ -1,147 +1,140 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Documentation for using OptionParser in Xojo">
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>OptionParser (API)</title>
+  
+
+  <link rel="shortcut icon" href="./img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="./css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="./css/highlight.css">
+
+  <script src="./js/jquery-2.1.1.min.js"></script>
+  <script src="./js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="./js/highlight.pack.js"></script>
+  <script src="./js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> OptionParser (API)</a>
         
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+      <ul class="current">
+    
         
-        <link rel="shortcut icon" href="./img/favicon.ico">
-
-        <title>OptionParser (API)</title>
-
-        <link href="./css/bootstrap-custom.min.css" rel="stylesheet">
-        <link href="./css/font-awesome-4.0.3.css" rel="stylesheet">
-        <link href="./css/prettify-1.0.css" rel="stylesheet">
-        <link href="./css/base.css" rel="stylesheet">
+            <li class="toctree-l1 current">
+                <a class="current" href=".">Home</a>
+                
+                    <ul>
+                    
+                        <li class="toctree-l3"><a href="#welcome">Welcome</a></li>
+                        
+                            <li><a class="toctree-l4" href="#downloading">Downloading</a></li>
+                        
+                            <li><a class="toctree-l4" href="#getting-started">Getting Started</a></li>
+                        
+                            <li><a class="toctree-l4" href="#how-to-help">How to Help</a></li>
+                        
+                    
+                    </ul>
+                
+            </li>
         
 
-        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-        <![endif]-->
-
+    
         
-    </head>
-
-    <body class="homepage">
-
-        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container">
-
-        <!-- Collapsed navigation -->
-        <div class="navbar-header">
+            <span>OptionParser</span>
             
-            <!-- Expander button -->
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            
-
-            <!-- Main title -->
-            <a class="navbar-brand" href=".">OptionParser (API)</a>
-        </div>
-
-        <!-- Expanded navigation -->
-        <div class="navbar-collapse collapse">
-            
-                <!-- Main navigation -->
-                <ul class="nav navbar-nav">
-                
-                
-                    <li class="active">
-                        <a href=".">Home</a>
-                    </li>
-                
-                
-                
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">OptionParser <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                        
-                            <li >
-                                <a href="OptionParser/OptionParser/">OptionParser</a>
-                            </li>
-                        
-                            <li >
-                                <a href="OptionParser/Option/">Option</a>
-                            </li>
-                        
-                            <li >
-                                <a href="OptionParser/OptionInvalidKeyValueException/">OptionInvalidKeyValueException</a>
-                            </li>
-                        
-                            <li >
-                                <a href="OptionParser/OptionParserException/">OptionParserException</a>
-                            </li>
-                        
-                            <li >
-                                <a href="OptionParser/OptionMissingKeyException/">OptionMissingKeyException</a>
-                            </li>
-                        
-                            <li >
-                                <a href="OptionParser/OptionUnrecognizedKeyException/">OptionUnrecognizedKeyException</a>
-                            </li>
-                        
-                        </ul>
-                    </li>
-                
-                
-                
-                    <li >
-                        <a href="LICENSE/">License</a>
-                    </li>
-                
-                
-                </ul>
-            
-
-            
-            <!-- Search, Navigation and Repo links -->
-            <ul class="nav navbar-nav navbar-right">
-                
-                
-                <li class="disabled">
-                    <a rel="next" >
-                        <i class="fa fa-arrow-left"></i> Previous
-                    </a>
+                <li class="toctree-l2 ">
+                    <a class="" href="OptionParser/OptionParser/">OptionParser</a>
+                    
                 </li>
-                <li >
-                    <a rel="prev" href="OptionParser/OptionParser/">
-                        Next <i class="fa fa-arrow-right"></i>
-                    </a>
-                </li>
-                
-                
-            </ul>
             
-        </div>
-    </div>
+                <li class="toctree-l2 ">
+                    <a class="" href="OptionParser/Option/">Option</a>
+                    
+                </li>
+            
+                <li class="toctree-l2 ">
+                    <a class="" href="OptionParser/OptionInvalidKeyValueException/">OptionInvalidKeyValueException</a>
+                    
+                </li>
+            
+                <li class="toctree-l2 ">
+                    <a class="" href="OptionParser/OptionParserException/">OptionParserException</a>
+                    
+                </li>
+            
+                <li class="toctree-l2 ">
+                    <a class="" href="OptionParser/OptionMissingKeyException/">OptionMissingKeyException</a>
+                    
+                </li>
+            
+                <li class="toctree-l2 ">
+                    <a class="" href="OptionParser/OptionUnrecognizedKeyException/">OptionUnrecognizedKeyException</a>
+                    
+                </li>
+            
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="LICENSE/">License</a>
+                
+            </li>
+        
+
+    
+</ul>
+
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">OptionParser (API)</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+    <li>Home</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
 </div>
-
-        <div class="container">
-            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
-    <ul class="nav bs-sidenav">
-    
-        <li class="main active"><a href="#welcome">Welcome</a></li>
-        
-            <li><a href="#downloading">Downloading</a></li>
-        
-            <li><a href="#getting-started">Getting Started</a></li>
-        
-            <li><a href="#how-to-help">How to Help</a></li>
-        
-    
-    </ul>
-</div></div>
-            <div class="col-md-9" role="main">
-
-<h1 id="welcome">Welcome</h1>
+          <div role="main">
+            <div class="section">
+              <h1 id="welcome">Welcome</h1>
 <p><code>OptionParser</code> is a set of classes to handle parsing command line parameters given to
 a <a href="http://www.xojo.com">Xojo</a> application. <code>OptionParser</code> handles all three application
 types:</p>
@@ -158,7 +151,7 @@ GitHub repository <a href="https://github.com/jcowgar/xojo-option-parser">xojo-o
 <h2 id="getting-started">Getting Started</h2>
 <p>To get started, simply include the <code>.xojo_xml_code</code> files in your project, populate
 the <code>OptionParser</code> with a few <code>Option</code>'s and call <code>.Parse(args)</code>:</p>
-<pre class="prettyprint well"><code>Dim opt As New OptionParser
+<pre><code>Dim opt As New OptionParser
 opt.AddOption New Option(&quot;v&quot;, &quot;verbose&quot;, &quot;Enable verbose output&quot;, Option.OptionType.Boolean)
 opt.AddOption New Option(&quot;f&quot;, &quot;file&quot;, &quot;File to parse&quot;, Option.OptionType.File)
 opt.Parse(args) // System.CommandLine for GUI/Web
@@ -181,23 +174,47 @@ Dim fh As FolderItem = opt.FileValue(&quot;file&quot;)
 <li>Best, fork the repo, add a unit test exposing the bug, fix the bug,
    and then submit a pull request (see #2).</li>
 </ol>
-</div>
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="OptionParser/OptionParser/" class="btn btn-neutral float-right" title="OptionParser"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+    <!-- Copyright etc -->
+    </p>
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
         </div>
+      </div>
 
-        <footer class="col-md-12">
-            <hr>
-            
-            <p>Documentation built with <a href="https://github.com/jcowgar/xojodoc">XojoDoc</a> and formatted with <a href="http://mkdocs.org">mkdocs</a>.</p>
-            
-            <!--<p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>-->
-        </footer>
+    </section>
 
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
         
+      <span><a href="" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      <span style="margin-left: 15px"><a href="OptionParser/OptionParser/" style="color: #fcfcfc">Next &raquo;</a></span>
+    </span>
+</div>
 
-        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-        <script src="./js/bootstrap-3.0.3.min.js"></script>
-        <script src="./js/prettify-1.0.min.js"></script>
-        <script src="./js/base.js"></script>
-        
-    </body>
+<!--
+MkDocs version  : 0.12.2
+Docs Build Date : 2015-04-26 17:34:39.692695
+-->
+</body>
 </html>

@@ -2,7 +2,7 @@ site_name: OptionParser (API)
 site_description: Documentation for using OptionParser in Xojo
 copyright: Documentation built with <a href="https://github.com/jcowgar/xojodoc">XojoDoc</a> and formatted with <a href="http://mkdocs.org">mkdocs</a>.
 
-theme: mkdocs
+theme: readthedocs
 
 docs_dir: docs
 site_dir: publish

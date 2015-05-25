@@ -885,7 +885,7 @@
    <SourceLine></SourceLine>
    <SourceLine>#If TargetConsole Then</SourceLine>
    <SourceLine>Print help</SourceLine>
-   <SourceLine>#ElseIf TargetHasGUI Then</SourceLine>
+   <SourceLine>#ElseIf TargetDesktop Then</SourceLine>
    <SourceLine>MsgBox help</SourceLine>
    <SourceLine>#Else</SourceLine>
    <SourceLine>#Pragma Warning "How to print help?"</SourceLine>

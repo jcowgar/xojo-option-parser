@@ -237,6 +237,44 @@
   <ItemParams>value As String</ItemParams>
   <ItemResult></ItemResult>
  </Method>
+ <Method>
+  <ItemName>AddAllowedValue</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub AddAllowedValue(ParamArray values() As String)</SourceLine>
+   <SourceLine>for each v as string in values</SourceLine>
+   <SourceLine>AllowedValues.Append v.Trim</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>ParamArray values() As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>AddDisallowedValue</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub AddDisallowedValue(ParamArray values() As String)</SourceLine>
+   <SourceLine>for each v as string in values</SourceLine>
+   <SourceLine>DisallowedValues.Append v.Trim</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>ParamArray values() As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
  <Note>
   <ItemName>Enums</ItemName>
   <Compatibility></Compatibility>
@@ -627,6 +665,34 @@
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
  </Property>
+ <Property>
+  <ItemName>AllowedValues()</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>AllowedValues() As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>AllowedValues() As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>DisallowedValues()</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>DisallowedValues() As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>DisallowedValues() As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
  <ViewBehavior>
   <ViewProperty>
    <ObjName>Description</ObjName>
@@ -732,13 +798,27 @@
    <PropertyGroup>Behavior</PropertyGroup>
    <ItemType>Boolean</ItemType>
   </ViewProperty>
+  <ViewProperty>
+   <ObjName>Type</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>OptionType</ItemType>
+   <EditorType>Enum</EditorType>
+   <Enumeration>
+    <ItemDef>0 - String</ItemDef>
+    <ItemDef>1 - Integer</ItemDef>
+    <ItemDef>2 - Double</ItemDef>
+    <ItemDef>3 - Date</ItemDef>
+    <ItemDef>4 - Boolean</ItemDef>
+    <ItemDef>5 - File</ItemDef>
+    <ItemDef>6 - Directory</ItemDef>
+   </Enumeration>
+  </ViewProperty>
  </ViewBehavior>
  <Constant>
   <ItemName>kNone</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <TextEncoding>134217984</TextEncoding>
-  <ItemName>kNone</ItemName>
   <ItemType>0</ItemType>
   <ItemDef></ItemDef>
   <ItemFlags>33</ItemFlags>
@@ -748,7 +828,6 @@
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <TextEncoding>134217984</TextEncoding>
-  <ItemName>kNumberNotSet</ItemName>
   <ItemType>2</ItemType>
   <ItemDef>-32768</ItemDef>
   <ItemFlags>33</ItemFlags>

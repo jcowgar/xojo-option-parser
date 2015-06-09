@@ -736,12 +736,12 @@
    <SourceLine>dim desc() as string = Array(Description)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>if AllowedValues.Ubound &lt;&gt; -1 then</SourceLine>
-   <SourceLine>dim chunk as string = "[can be one of: `" + join(AllowedValues, "', `") + "']"</SourceLine>
+   <SourceLine>dim chunk as string = "[can be: `" + join(AllowedValues, "', `") + "']"</SourceLine>
    <SourceLine>desc.Append chunk</SourceLine>
    <SourceLine>end if</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>if DisallowedValues.Ubound &lt;&gt; -1 then</SourceLine>
-   <SourceLine>dim chunk as string = "[may not be one of: `" + join(DisallowedValues, "', `") + "']"</SourceLine>
+   <SourceLine>dim chunk as string = "[may not be: `" + join(DisallowedValues, "', `") + "']"</SourceLine>
    <SourceLine>desc.Append chunk</SourceLine>
    <SourceLine>end if</SourceLine>
    <SourceLine></SourceLine>

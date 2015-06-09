@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<RBProject version="2014r2.1" FormatVersion="2" MinIDEVersion="20070100">
+<RBProject version="2015r2.2" FormatVersion="2" MinIDEVersion="20070100">
 <block type="Module" ID="634229026">
  <ObjName>OptionParser</ObjName>
  <ObjContainerID>1881215597</ObjContainerID>
@@ -885,7 +885,7 @@
    <SourceLine></SourceLine>
    <SourceLine>#If TargetConsole Then</SourceLine>
    <SourceLine>Print help</SourceLine>
-   <SourceLine>#ElseIf TargetHasGUI Then</SourceLine>
+   <SourceLine>#ElseIf TargetDesktop Then</SourceLine>
    <SourceLine>MsgBox help</SourceLine>
    <SourceLine>#Else</SourceLine>
    <SourceLine>#Pragma Warning "How to print help?"</SourceLine>
@@ -1439,7 +1439,6 @@
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <TextEncoding>134217984</TextEncoding>
-  <ItemName>kIndentPrefix</ItemName>
   <ItemType>0</ItemType>
   <ItemDef>&#32;&#32;</ItemDef>
   <ItemFlags>33</ItemFlags>
@@ -1449,7 +1448,6 @@
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <TextEncoding>134217984</TextEncoding>
-  <ItemName>kInvalidKeyValue</ItemName>
   <ItemType>0</ItemType>
   <ItemDef>key value is invalid</ItemDef>
   <ItemFlags>33</ItemFlags>
@@ -1459,7 +1457,6 @@
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <TextEncoding>134217984</TextEncoding>
-  <ItemName>kMissingKeyValue</ItemName>
   <ItemType>0</ItemType>
   <ItemDef>key value is missing</ItemDef>
   <ItemFlags>33</ItemFlags>

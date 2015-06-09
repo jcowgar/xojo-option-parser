@@ -2,3 +2,4 @@ docs
 */*.debug
 *.xojo_uistate
 *obsolete*
+.DS_Store

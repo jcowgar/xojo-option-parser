@@ -3,13 +3,18 @@ Protected Class App
 Inherits Application
 	#tag Event
 		Sub Open()
-		  dim parser as new OptionParser( "Example", "" )
-		  parser.AddOption new Option( "s", "something", "" )
+		  MsgBox "Command line: " + EndOfLine + EndOfLine + System.CommandLine
 		  
-		  parser.Parse System.CommandLine
+		  dim args() as string = OptionParser.CommandLineArgs
 		  
-		  if parser.OptionValue( "s" ).WasSet then
-		    MsgBox "'Something' was set to " + parser.OptionValue( "s" ).Value
+		  dim parser as new OptionParser("Example", "")
+		  parser.AddOption new Option("s", "something", "")
+		  parser.AddOption new Option("", "somethingelse", "")
+		  
+		  parser.Parse OptionParser.CommandLineArgs
+		  
+		  if parser.OptionValue("s").WasSet then
+		    MsgBox "'Something' was set to " + parser.OptionValue("s").Value
 		  end if
 		  
 		End Sub

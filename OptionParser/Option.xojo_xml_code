@@ -176,6 +176,16 @@
    <SourceLine>// to an `Integer`, `Double`, `Date`, `Boolean`, `FolderItem`, etc...</SourceLine>
    <SourceLine>//</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Check to see if the value is allowed or disallowed first</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>if AllowedValues.Ubound &lt;&gt; -1 and AllowedValues.IndexOf(value) = -1 then</SourceLine>
+   <SourceLine>raise new OptionInvalidKeyValueException("The key value is not allowed: " + value)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>if DisallowedValues.Ubound = -1 and DisallowedValues.IndexOf(value) &lt;&gt; -1 then</SourceLine>
+   <SourceLine>raise new OptionInvalidKeyValueException("The key value is dissallowed: " + value)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>Dim newValue As Variant</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Select Case Type</SourceLine>

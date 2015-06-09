@@ -637,12 +637,12 @@
   <ItemResult></ItemResult>
  </Method>
  <Method>
-  <ItemName>Parse</ItemName>
+  <ItemName>ParseStringValue</ItemName>
   <Compatibility>(TargetHasGUI)</Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub Parse(value As String)</SourceLine>
+   <SourceLine>Shared Function ParseStringValue(value As String) As String()</SourceLine>
    <SourceLine>//</SourceLine>
    <SourceLine>// Parse the arguments into a `String` array of parameters, then pass the contents of that</SourceLine>
    <SourceLine>// array to the 'real' `Parse(args() As String)` method.</SourceLine>
@@ -663,7 +663,7 @@
    <SourceLine></SourceLine>
    <SourceLine>Dim rx As New RegEx</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>'#if TargetConsole then</SourceLine>
+   <SourceLine>'#if TargetWin32 then</SourceLine>
    <SourceLine>'</SourceLine>
    <SourceLine>'// Code from Michel Bujardet (https://forum.xojo.com/14420-system-commandline)</SourceLine>
    <SourceLine>'</SourceLine>
@@ -688,29 +688,29 @@
    <SourceLine>dim pattern as string = """?(\Q" + myPath.ReplaceAllB( "\E", "\\EE\Q" ) + "\E)""? (.*)"</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>rx.SearchPattern = pattern</SourceLine>
-   <SourceLine>dim match as RegExMatch = rx.Search( value )</SourceLine>
+   <SourceLine>dim match as RegExMatch = rx.Search(value)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>if match IsA RegExMatch then</SourceLine>
-   <SourceLine>matches.Append match.SubExpressionString( 1 )</SourceLine>
-   <SourceLine>rest = match.SubExpressionString( 2 )</SourceLine>
-   <SourceLine>ParseRestOfString( rest, matches )</SourceLine>
+   <SourceLine>matches.Append match.SubExpressionString(1)</SourceLine>
+   <SourceLine>rest = match.SubExpressionString(2)</SourceLine>
+   <SourceLine>ParseRestOfString(rest, matches)</SourceLine>
    <SourceLine>else</SourceLine>
    <SourceLine>matches.Append value</SourceLine>
    <SourceLine>end if</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>'#endif</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>Self.Parse(matches)</SourceLine>
+   <SourceLine>return(matches)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>End Sub</SourceLine>
+   <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
   <ItemParams>value As String</ItemParams>
-  <ItemResult></ItemResult>
+  <ItemResult>String()</ItemResult>
  </Method>
  <Method>
   <ItemName>RaiseInvalidKeyValueException</ItemName>
@@ -1136,35 +1136,34 @@
  </Method>
  <Method>
   <ItemName>ParseRestOfString</ItemName>
-  <Compatibility></Compatibility>
+  <Compatibility>(TargetHasGUI)</Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub ParseRestOfString(value As String, appendTo() As String)</SourceLine>
+   <SourceLine>Shared Sub ParseRestOfString(value As String, appendTo() As String)</SourceLine>
    <SourceLine>value = value.Trim</SourceLine>
-   <SourceLineBreakpoint>1</SourceLineBreakpoint>
    <SourceLine>if value = "" then</SourceLine>
    <SourceLine>return</SourceLine>
    <SourceLine>end if</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>if value.Encoding = nil then</SourceLine>
    <SourceLine>#if TargetMacOS then</SourceLine>
-   <SourceLine>value = value.DefineEncoding( Encodings.MacRoman )</SourceLine>
+   <SourceLine>value = value.DefineEncoding(Encodings.MacRoman)</SourceLine>
    <SourceLine>#else</SourceLine>
-   <SourceLine>value = value.DefineEncoding( Encodings.ISOLatin1 )</SourceLine>
+   <SourceLine>value = value.DefineEncoding(Encodings.ISOLatin1)</SourceLine>
    <SourceLine>#endif</SourceLine>
    <SourceLine>end if</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>value = value.ConvertEncoding( Encodings.UTF8 )</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>dim allChars() as string = value.Split( "" )</SourceLine>
+   <SourceLine>dim allChars() as string = value.Split("")</SourceLine>
    <SourceLine>dim thisChunk() as string</SourceLine>
    <SourceLine>dim inQuote as boolean</SourceLine>
    <SourceLine>dim quoteChar as string</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>dim charIndex as integer</SourceLine>
    <SourceLine>while charIndex &lt;= allChars.Ubound</SourceLine>
-   <SourceLine>dim thisChar as string = allChars( charIndex )</SourceLine>
+   <SourceLine>dim thisChar as string = allChars(charIndex)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>if thisChar = "\" and charIndex &lt; allChars.Ubound then</SourceLine>
    <SourceLine>thisChunk.Append allChars(charIndex + 1)</SourceLine>
@@ -1196,7 +1195,6 @@
    <SourceLine>wend</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>if thisChunk.Ubound &lt;&gt; -1 then</SourceLine>
-   <SourceLineBreakpoint>54</SourceLineBreakpoint>
    <SourceLine>appendTo.Append join(thisChunk, "")</SourceLine>
    <SourceLine>end if</SourceLine>
    <SourceLine>End Sub</SourceLine>
@@ -1204,17 +1202,17 @@
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
   <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
+  <IsShared>1</IsShared>
   <ItemParams>value As String, appendTo() As String</ItemParams>
   <ItemResult></ItemResult>
  </Method>
  <Method>
   <ItemName>IsQuoteCharacter</ItemName>
-  <Compatibility></Compatibility>
+  <Compatibility>(TargetHasGUI)</Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function IsQuoteCharacter(char As String) As Boolean</SourceLine>
+   <SourceLine>Shared Function IsQuoteCharacter(char As String) As Boolean</SourceLine>
    <SourceLine>#if TargetWin32 then</SourceLine>
    <SourceLine>return (char = """")</SourceLine>
    <SourceLine>#else</SourceLine>
@@ -1225,9 +1223,53 @@
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
   <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
+  <IsShared>1</IsShared>
   <ItemParams>char As String</ItemParams>
   <ItemResult>Boolean</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>CommandLineArgs</ItemName>
+  <Compatibility>(TargetHasGUI)</Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function CommandLineArgs() As String()</SourceLine>
+   <SourceLine>// Return an array of command-line arguments</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim result() as string</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetMacOS and not DebugBuild then</SourceLine>
+   <SourceLine>const kCocoaLib = "Cocoa.framework"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>declare function NSClassFromString lib kCocoaLib (aClassName as CFStringRef) as Ptr</SourceLine>
+   <SourceLine>declare function defaultCenter lib kCocoaLib selector "processInfo" (class_id as Ptr) as Ptr</SourceLine>
+   <SourceLine>declare function arguments lib kCocoaLib selector "arguments" (obj_id as Ptr) as Ptr</SourceLine>
+   <SourceLine>declare function m_count lib kCocoaLib selector "count" (obj as Ptr) as UInteger</SourceLine>
+   <SourceLine>declare function objectAtIndex lib kCocoaLib selector "objectAtIndex:" (theArray as Ptr, idx as Integer) as CFStringRef</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>static c as Ptr = defaultCenter(NSClassFromString("NSProcessInfo"))</SourceLine>
+   <SourceLine>dim nsArrayRef as Ptr = arguments(c)</SourceLine>
+   <SourceLine>dim ub as integer = m_count(nsArrayRef) - 1</SourceLine>
+   <SourceLine>for i as integer = 0 to ub</SourceLine>
+   <SourceLine>dim s as string = objectAtIndex(nsArrayRef, i)</SourceLine>
+   <SourceLine>result.Append s</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>result = ParseStringValue(System.CommandLine) // Not perfect</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>return result</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String()</ItemResult>
  </Method>
  <Note>
   <ItemName>Overview</ItemName>

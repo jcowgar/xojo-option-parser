@@ -638,7 +638,7 @@
  </Method>
  <Method>
   <ItemName>Parse</ItemName>
-  <Compatibility></Compatibility>
+  <Compatibility>(TargetHasGUI)</Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
@@ -649,9 +649,9 @@
    <SourceLine>//</SourceLine>
    <SourceLine>// ### Parameters</SourceLine>
    <SourceLine>//</SourceLine>
-   <SourceLine>// * `value` - Command line arguments contained in a single line string. This is most often</SourceLine>
-   <SourceLine>//   used in a Desktop or Web application via a call to `System.CommandLine` as a Desktop</SourceLine>
-   <SourceLine>//   and Web application has no direct access to the `args()` parameter that a `ConsoleApplication`</SourceLine>
+   <SourceLine>// * `value` - Command line arguments contained in a single line string. This is </SourceLine>
+   <SourceLine>//   used in a Desktop via a call to `System.CommandLine` as a Desktop</SourceLine>
+   <SourceLine>//   has no direct access to the `args()` parameter that a `ConsoleApplication`</SourceLine>
    <SourceLine>//   does.</SourceLine>
    <SourceLine>//</SourceLine>
    <SourceLine>// ### Notes</SourceLine>
@@ -663,17 +663,20 @@
    <SourceLine></SourceLine>
    <SourceLine>Dim rx As New RegEx</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>#if TargetConsole then</SourceLine>
-   <SourceLine>rx.SearchPattern = "(""[^""]+""|[^\s""]+)"</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Dim match As RegExMatch = rx.Search(value)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>While match &lt;&gt; Nil</SourceLine>
-   <SourceLine>matches.Append ReplaceAll(match.SubExpressionString(1), chr(34), "")</SourceLine>
-   <SourceLine>match = rx.Search()</SourceLine>
-   <SourceLine>Wend</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>#else // TargetDesktop</SourceLine>
+   <SourceLine>'#if TargetConsole then</SourceLine>
+   <SourceLine>'</SourceLine>
+   <SourceLine>'// Code from Michel Bujardet (https://forum.xojo.com/14420-system-commandline)</SourceLine>
+   <SourceLine>'</SourceLine>
+   <SourceLine>'rx.SearchPattern = "(""[^""]+""|[^\s""]+)"</SourceLine>
+   <SourceLine>'</SourceLine>
+   <SourceLine>'Dim match As RegExMatch = rx.Search(value)</SourceLine>
+   <SourceLine>'</SourceLine>
+   <SourceLine>'While match &lt;&gt; Nil</SourceLine>
+   <SourceLine>'matches.Append ReplaceAll(match.SubExpressionString(1), chr(34), "")</SourceLine>
+   <SourceLine>'match = rx.Search()</SourceLine>
+   <SourceLine>'Wend</SourceLine>
+   <SourceLine>'</SourceLine>
+   <SourceLine>'#else // TargetDesktop</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>//</SourceLine>
    <SourceLine>// We have to peel off of the executable first</SourceLine>
@@ -695,11 +698,10 @@
    <SourceLine>matches.Append value</SourceLine>
    <SourceLine>end if</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>#endif</SourceLine>
+   <SourceLine>'#endif</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Self.Parse(matches)</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>// Code from Michel Bujardet (https://forum.xojo.com/14420-system-commandline)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>End Sub</SourceLine>
   </ItemSource>

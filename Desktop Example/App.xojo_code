@@ -11,7 +11,7 @@ Inherits Application
 		  parser.AddOption new Option("s", "something", "")
 		  parser.AddOption new Option("", "somethingelse", "")
 		  
-		  parser.Parse OptionParser.CommandLineArgs
+		  parser.Parse args
 		  
 		  if parser.OptionValue("s").WasSet then
 		    MsgBox "'Something' was set to " + parser.OptionValue("s").Value

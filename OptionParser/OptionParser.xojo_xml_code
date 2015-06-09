@@ -637,21 +637,21 @@
   <ItemResult></ItemResult>
  </Method>
  <Method>
-  <ItemName>Parse</ItemName>
-  <Compatibility></Compatibility>
+  <ItemName>ParseStringValue</ItemName>
+  <Compatibility>(TargetHasGUI)</Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub Parse(value As String)</SourceLine>
+   <SourceLine>Shared Function ParseStringValue(value As String) As String()</SourceLine>
    <SourceLine>//</SourceLine>
    <SourceLine>// Parse the arguments into a `String` array of parameters, then pass the contents of that</SourceLine>
    <SourceLine>// array to the 'real' `Parse(args() As String)` method.</SourceLine>
    <SourceLine>//</SourceLine>
    <SourceLine>// ### Parameters</SourceLine>
    <SourceLine>//</SourceLine>
-   <SourceLine>// * `value` - Command line arguments contained in a single line string. This is most often</SourceLine>
-   <SourceLine>//   used in a Desktop or Web application via a call to `System.CommandLine` as a Desktop</SourceLine>
-   <SourceLine>//   and Web application has no direct access to the `args()` parameter that a `ConsoleApplication`</SourceLine>
+   <SourceLine>// * `value` - Command line arguments contained in a single line string. This is </SourceLine>
+   <SourceLine>//   used in a Desktop via a call to `System.CommandLine` as a Desktop</SourceLine>
+   <SourceLine>//   has no direct access to the `args()` parameter that a `ConsoleApplication`</SourceLine>
    <SourceLine>//   does.</SourceLine>
    <SourceLine>//</SourceLine>
    <SourceLine>// ### Notes</SourceLine>
@@ -659,29 +659,58 @@
    <SourceLine>// See `Parse(args() As String)` for more detailed information</SourceLine>
    <SourceLine>//</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>Dim rx As New RegEx</SourceLine>
-   <SourceLine>rx.SearchPattern = "(""[^""]+""|[^\s""]+)"</SourceLine>
-   <SourceLine></SourceLine>
    <SourceLine>Dim matches() As String</SourceLine>
-   <SourceLine>Dim match As RegExMatch = rx.Search(value)</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>While match &lt;&gt; Nil</SourceLine>
-   <SourceLine>matches.Append ReplaceAll(match.SubExpressionString(1), chr(34), "")</SourceLine>
-   <SourceLine>match = rx.Search()</SourceLine>
-   <SourceLine>Wend</SourceLine>
+   <SourceLine>Dim rx As New RegEx</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>Self.Parse(matches)</SourceLine>
+   <SourceLine>'#if TargetWin32 then</SourceLine>
+   <SourceLine>'</SourceLine>
+   <SourceLine>'// Code from Michel Bujardet (https://forum.xojo.com/14420-system-commandline)</SourceLine>
+   <SourceLine>'</SourceLine>
+   <SourceLine>'rx.SearchPattern = "(""[^""]+""|[^\s""]+)"</SourceLine>
+   <SourceLine>'</SourceLine>
+   <SourceLine>'Dim match As RegExMatch = rx.Search(value)</SourceLine>
+   <SourceLine>'</SourceLine>
+   <SourceLine>'While match &lt;&gt; Nil</SourceLine>
+   <SourceLine>'matches.Append ReplaceAll(match.SubExpressionString(1), chr(34), "")</SourceLine>
+   <SourceLine>'match = rx.Search()</SourceLine>
+   <SourceLine>'Wend</SourceLine>
+   <SourceLine>'</SourceLine>
+   <SourceLine>'#else // TargetDesktop</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>// Code from Michel Bujardet (https://forum.xojo.com/14420-system-commandline)</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// We have to peel off of the executable first</SourceLine>
+   <SourceLine>//</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>End Sub</SourceLine>
+   <SourceLine>dim rest as string</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim myPath as string = App.ExecutableFile.NativePath</SourceLine>
+   <SourceLine>dim pattern as string = """?(\Q" + myPath.ReplaceAllB( "\E", "\\EE\Q" ) + "\E)""? (.*)"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>rx.SearchPattern = pattern</SourceLine>
+   <SourceLine>dim match as RegExMatch = rx.Search(value)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if match IsA RegExMatch then</SourceLine>
+   <SourceLine>matches.Append match.SubExpressionString(1)</SourceLine>
+   <SourceLine>rest = match.SubExpressionString(2)</SourceLine>
+   <SourceLine>ParseRestOfString(rest, matches)</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>matches.Append value</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>'#endif</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>return(matches)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
   <ItemParams>value As String</ItemParams>
-  <ItemResult></ItemResult>
+  <ItemResult>String()</ItemResult>
  </Method>
  <Method>
   <ItemName>RaiseInvalidKeyValueException</ItemName>
@@ -1104,6 +1133,203 @@
   <IsShared>0</IsShared>
   <ItemParams>key As Variant</ItemParams>
   <ItemResult>Variant()</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>ParseRestOfString</ItemName>
+  <Compatibility>(TargetHasGUI)</Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Sub ParseRestOfString(value As String, appendTo() As String)</SourceLine>
+   <SourceLine>value = value.Trim</SourceLine>
+   <SourceLine>if value = "" then</SourceLine>
+   <SourceLine>return</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if value.Encoding = nil then</SourceLine>
+   <SourceLine>#if TargetMacOS then</SourceLine>
+   <SourceLine>value = value.DefineEncoding(Encodings.MacRoman)</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>value = value.DefineEncoding(Encodings.ISOLatin1)</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>value = value.ConvertEncoding( Encodings.UTF8 )</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim allChars() as string = value.Split("")</SourceLine>
+   <SourceLine>dim thisChunk() as string</SourceLine>
+   <SourceLine>dim inQuote as boolean</SourceLine>
+   <SourceLine>dim quoteChar as string</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim charIndex as integer</SourceLine>
+   <SourceLine>while charIndex &lt;= allChars.Ubound</SourceLine>
+   <SourceLine>dim thisChar as string = allChars(charIndex)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if thisChar = "\" and charIndex &lt; allChars.Ubound then</SourceLine>
+   <SourceLine>thisChunk.Append allChars(charIndex + 1)</SourceLine>
+   <SourceLine>charIndex = charIndex + 1</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>elseif inQuote and thisChar = quoteChar then</SourceLine>
+   <SourceLine>inQuote = false</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>elseif inQuote then</SourceLine>
+   <SourceLine>thisChunk.Append thisChar</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>elseif IsQuoteCharacter(thisChar) then</SourceLine>
+   <SourceLine>inQuote = true</SourceLine>
+   <SourceLine>quoteChar = thisChar</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>elseif thisChar = " " then</SourceLine>
+   <SourceLine>if thisChunk.Ubound &lt;&gt; -1 then</SourceLine>
+   <SourceLine>appendTo.Append join(thisChunk, "")</SourceLine>
+   <SourceLine>redim thisChunk(-1)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>else // Just a character</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>thisChunk.Append thisChar</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>charIndex = charIndex + 1</SourceLine>
+   <SourceLine>wend</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if thisChunk.Ubound &lt;&gt; -1 then</SourceLine>
+   <SourceLine>appendTo.Append join(thisChunk, "")</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>value As String, appendTo() As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>IsQuoteCharacter</ItemName>
+  <Compatibility>(TargetHasGUI)</Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Function IsQuoteCharacter(char As String) As Boolean</SourceLine>
+   <SourceLine>#if TargetWin32 then</SourceLine>
+   <SourceLine>return (char = """")</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>return (char = """" or char = "'")</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>char As String</ItemParams>
+  <ItemResult>Boolean</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>CommandLineArgs</ItemName>
+  <Compatibility>(TargetHasGUI)</Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function CommandLineArgs() As String()</SourceLine>
+   <SourceLine>// Return an array of command-line arguments</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>const kDebugDeclares = false</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim args() as string</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if DebugBuild and not kDebugDeclares then </SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Not perfect, but will emulate what you'll get in the built app</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>args = ParseStringValue(System.CommandLine)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#elseif TargetMacOS then</SourceLine>
+   <SourceLine>const kCocoaLib = "Cocoa.framework"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>declare function NSClassFromString lib kCocoaLib (aClassName as CFStringRef) as Ptr</SourceLine>
+   <SourceLine>declare function defaultCenter lib kCocoaLib selector "processInfo" (class_id as Ptr) as Ptr</SourceLine>
+   <SourceLine>declare function arguments lib kCocoaLib selector "arguments" (obj_id as Ptr) as Ptr</SourceLine>
+   <SourceLine>declare function m_count lib kCocoaLib selector "count" (obj as Ptr) as UInteger</SourceLine>
+   <SourceLine>declare function objectAtIndex lib kCocoaLib selector "objectAtIndex:" (theArray as Ptr, idx as Integer) as CFStringRef</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>static c as Ptr = defaultCenter(NSClassFromString("NSProcessInfo"))</SourceLine>
+   <SourceLine>dim nsArrayRef as Ptr = arguments(c)</SourceLine>
+   <SourceLine>dim ub as integer = m_count(nsArrayRef) - 1</SourceLine>
+   <SourceLine>for i as integer = 0 to ub</SourceLine>
+   <SourceLine>dim s as string = objectAtIndex(nsArrayRef, i)</SourceLine>
+   <SourceLine>args.Append s</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#elseif TargetWin32 then</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Windows and Linux code from Thomas Tempelmann</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>declare function GetCommandLineW lib "kernel32.dll" () as Ptr</SourceLine>
+   <SourceLine>declare function CommandLineToArgvW lib "shell32.dll" (lpCmdLine As Ptr, ByRef pNumArgs As Integer) As Ptr</SourceLine>
+   <SourceLine>declare sub LocalFree Lib "kernel32.dll" (p as Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim cl as Ptr = GetCommandLineW()</SourceLine>
+   <SourceLine>dim n as Integer</SourceLine>
+   <SourceLine>dim argList as Ptr = CommandLineToArgvW (cl, n)</SourceLine>
+   <SourceLine>for idx as Integer = 0 to n-1</SourceLine>
+   <SourceLine>dim mb as MemoryBlock = argList.Ptr(idx*4)</SourceLine>
+   <SourceLine>// mb points to a UTF16 0-terminated string. It seems we have to scan its length ourselves now.</SourceLine>
+   <SourceLine>dim len as Integer</SourceLine>
+   <SourceLine>while mb.UInt16Value(len) &lt;&gt; 0</SourceLine>
+   <SourceLine>len = len + 2</SourceLine>
+   <SourceLine>wend</SourceLine>
+   <SourceLine>dim s as String = mb.StringValue(0,len).DefineEncoding(Encodings.UTF16)</SourceLine>
+   <SourceLine>s = s.ConvertEncoding(Encodings.UTF8)</SourceLine>
+   <SourceLine>args.Append s</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine>LocalFree(argList)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#elseif TargetLinux then</SourceLine>
+   <SourceLine>// read from "/proc/self/cmdline", each item is 0-terminated</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>const SystemLib = "libc.so"</SourceLine>
+   <SourceLine>declare function open lib SystemLib (path as CString, flags as Integer) As Integer</SourceLine>
+   <SourceLine>declare function read lib SystemLib (fd as Integer, data as Ptr, n as Integer) as Integer</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// first, read the entire cmdline into a string</SourceLine>
+   <SourceLine>dim fd as Integer = open ("/proc/self/cmdline", 0)</SourceLine>
+   <SourceLine>dim s as String</SourceLine>
+   <SourceLine>do</SourceLine>
+   <SourceLine>dim mb as new MemoryBlock(1000)</SourceLine>
+   <SourceLine>dim n as Integer = read (fd, mb, mb.Size)</SourceLine>
+   <SourceLine>s = s + mb.StringValue (0, n)</SourceLine>
+   <SourceLine>if n &lt; mb.Size then exit</SourceLine>
+   <SourceLine>loop</SourceLine>
+   <SourceLine>args = s.Split(Chr(0))</SourceLine>
+   <SourceLine>call args.Pop // remove last array item because of extra 00 byte at end of string</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>for i as integer = 0 to args.Ubound</SourceLine>
+   <SourceLineBreakpoint>75</SourceLineBreakpoint>
+   <SourceLine>dim thisArg as string = args(i)</SourceLine>
+   <SourceLine>if Encodings.UTF8.IsValidData(thisArg) then</SourceLine>
+   <SourceLine>args(i) = thisArg.DefineEncoding(Encodings.UTF8)</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>args(i) = thisArg.DefineEncoding(Encodings.ISOLatin1)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>return args</SourceLine>
+   <SourceLineBreakpoint>86</SourceLineBreakpoint>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String()</ItemResult>
  </Method>
  <Note>
   <ItemName>Overview</ItemName>

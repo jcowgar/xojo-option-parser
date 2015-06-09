@@ -182,7 +182,7 @@
    <SourceLine>if AllowedValues.Ubound &lt;&gt; -1 and AllowedValues.IndexOf(value) = -1 then</SourceLine>
    <SourceLine>raise new OptionInvalidKeyValueException("The key value is not allowed: " + value)</SourceLine>
    <SourceLine>end if</SourceLine>
-   <SourceLine>if DisallowedValues.Ubound = -1 and DisallowedValues.IndexOf(value) &lt;&gt; -1 then</SourceLine>
+   <SourceLine>if DisallowedValues.Ubound &lt;&gt; -1 and DisallowedValues.IndexOf(value) &lt;&gt; -1 then</SourceLine>
    <SourceLine>raise new OptionInvalidKeyValueException("The key value is dissallowed: " + value)</SourceLine>
    <SourceLine>end if</SourceLine>
    <SourceLine></SourceLine>

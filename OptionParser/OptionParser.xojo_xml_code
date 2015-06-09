@@ -659,16 +659,43 @@
    <SourceLine>// See `Parse(args() As String)` for more detailed information</SourceLine>
    <SourceLine>//</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>Dim matches() As String</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>Dim rx As New RegEx</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if TargetConsole then</SourceLine>
    <SourceLine>rx.SearchPattern = "(""[^""]+""|[^\s""]+)"</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>Dim matches() As String</SourceLine>
    <SourceLine>Dim match As RegExMatch = rx.Search(value)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>While match &lt;&gt; Nil</SourceLine>
    <SourceLine>matches.Append ReplaceAll(match.SubExpressionString(1), chr(34), "")</SourceLine>
    <SourceLine>match = rx.Search()</SourceLine>
    <SourceLine>Wend</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#else // TargetDesktop</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// We have to peel off of the executable first</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim rest as string</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim myPath as string = App.ExecutableFile.NativePath</SourceLine>
+   <SourceLine>dim pattern as string = """?(\Q" + myPath.ReplaceAllB( "\E", "\\EE\Q" ) + "\E)""? (.*)"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>rx.SearchPattern = pattern</SourceLine>
+   <SourceLine>dim match as RegExMatch = rx.Search( value )</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if match IsA RegExMatch then</SourceLine>
+   <SourceLine>matches.Append match.SubExpressionString( 1 )</SourceLine>
+   <SourceLine>rest = match.SubExpressionString( 2 )</SourceLine>
+   <SourceLine>ParseRestOfString( rest, matches )</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>matches.Append value</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#endif</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Self.Parse(matches)</SourceLine>
    <SourceLine></SourceLine>
@@ -1104,6 +1131,101 @@
   <IsShared>0</IsShared>
   <ItemParams>key As Variant</ItemParams>
   <ItemResult>Variant()</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>ParseRestOfString</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub ParseRestOfString(value As String, appendTo() As String)</SourceLine>
+   <SourceLine>value = value.Trim</SourceLine>
+   <SourceLineBreakpoint>1</SourceLineBreakpoint>
+   <SourceLine>if value = "" then</SourceLine>
+   <SourceLine>return</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if value.Encoding = nil then</SourceLine>
+   <SourceLine>#if TargetMacOS then</SourceLine>
+   <SourceLine>value = value.DefineEncoding( Encodings.MacRoman )</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>value = value.DefineEncoding( Encodings.ISOLatin1 )</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>value = value.ConvertEncoding( Encodings.UTF8 )</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim allChars() as string = value.Split( "" )</SourceLine>
+   <SourceLine>dim thisChunk() as string</SourceLine>
+   <SourceLine>dim inQuote as boolean</SourceLine>
+   <SourceLine>dim quoteChar as string</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim charIndex as integer</SourceLine>
+   <SourceLine>while charIndex &lt;= allChars.Ubound</SourceLine>
+   <SourceLine>dim thisChar as string = allChars( charIndex )</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if thisChar = "\" and charIndex &lt; allChars.Ubound then</SourceLine>
+   <SourceLine>thisChunk.Append allChars(charIndex + 1)</SourceLine>
+   <SourceLine>charIndex = charIndex + 1</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>elseif inQuote and thisChar = quoteChar then</SourceLine>
+   <SourceLine>inQuote = false</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>elseif inQuote then</SourceLine>
+   <SourceLine>thisChunk.Append thisChar</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>elseif IsQuoteCharacter(thisChar) then</SourceLine>
+   <SourceLine>inQuote = true</SourceLine>
+   <SourceLine>quoteChar = thisChar</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>elseif thisChar = " " then</SourceLine>
+   <SourceLine>if thisChunk.Ubound &lt;&gt; -1 then</SourceLine>
+   <SourceLine>appendTo.Append join(thisChunk, "")</SourceLine>
+   <SourceLine>redim thisChunk(-1)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>else // Just a character</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>thisChunk.Append thisChar</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>charIndex = charIndex + 1</SourceLine>
+   <SourceLine>wend</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if thisChunk.Ubound &lt;&gt; -1 then</SourceLine>
+   <SourceLineBreakpoint>54</SourceLineBreakpoint>
+   <SourceLine>appendTo.Append join(thisChunk, "")</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>value As String, appendTo() As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>IsQuoteCharacter</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function IsQuoteCharacter(char As String) As Boolean</SourceLine>
+   <SourceLine>#if TargetWin32 then</SourceLine>
+   <SourceLine>return (char = """")</SourceLine>
+   <SourceLine>#else</SourceLine>
+   <SourceLine>return (char = """" or char = "'")</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>char As String</ItemParams>
+  <ItemResult>Boolean</ItemResult>
  </Method>
  <Note>
   <ItemName>Overview</ItemName>

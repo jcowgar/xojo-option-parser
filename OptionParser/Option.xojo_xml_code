@@ -255,7 +255,11 @@
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Sub AddAllowedValue(ParamArray values() As String)</SourceLine>
    <SourceLine>for each v as string in values</SourceLine>
-   <SourceLine>AllowedValues.Append v.Trim</SourceLine>
+   <SourceLine>v = v.Trim</SourceLine>
+   <SourceLine>if DisallowedValues.IndexOf(v) &lt;&gt; -1 then</SourceLine>
+   <SourceLine>raise new OptionParserException("A value cannot be both allowed and disallowed: " + v)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>AllowedValues.Append v</SourceLine>
    <SourceLine>next</SourceLine>
    <SourceLine>End Sub</SourceLine>
   </ItemSource>
@@ -274,7 +278,11 @@
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Sub AddDisallowedValue(ParamArray values() As String)</SourceLine>
    <SourceLine>for each v as string in values</SourceLine>
-   <SourceLine>DisallowedValues.Append v.Trim</SourceLine>
+   <SourceLine>v = v.Trim</SourceLine>
+   <SourceLine>if AllowedValues.IndexOf(v) &lt;&gt; -1 then</SourceLine>
+   <SourceLine>raise new OptionParserException("A value cannot be both allowed and disallowed: " + v)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>DisallowedValues.Append v</SourceLine>
    <SourceLine>next</SourceLine>
    <SourceLine>End Sub</SourceLine>
   </ItemSource>

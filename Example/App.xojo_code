@@ -4,6 +4,10 @@ Inherits ConsoleApplication
 	#tag Event
 		Function Run(args() as String) As Integer
 		  ParseOptions(args)
+		  if Options.HelpRequested then
+		    Options.ShowHelp
+		    return 0
+		  end if
 		  
 		  If Options.BooleanValue("test") Then
 		    RunUnitTests

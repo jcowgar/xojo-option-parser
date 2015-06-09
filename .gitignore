@@ -4,3 +4,4 @@ docs
 *obsolete*
 .DS_Store
 Desktop Example/Builds - OptionParser Example.xojo_project
+*.tar.gz

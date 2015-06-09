@@ -2,7 +2,7 @@
 <RBProject version="2015r2.2" FormatVersion="2" MinIDEVersion="20070100">
 <block type="Module" ID="634229026">
  <ObjName>OptionParser</ObjName>
- <ObjContainerID>1881215597</ObjContainerID>
+ <ObjContainerID>519440383</ObjContainerID>
  <IsClass>1</IsClass>
  <ItemFlags>1</ItemFlags>
  <IsInterface>0</IsInterface>
@@ -1236,9 +1236,18 @@
    <SourceLine> Shared Function CommandLineArgs() As String()</SourceLine>
    <SourceLine>// Return an array of command-line arguments</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>dim result() as string</SourceLine>
+   <SourceLine>const kDebugDeclares = true</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>#if TargetMacOS and not DebugBuild then</SourceLine>
+   <SourceLine>dim args() as string</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#if DebugBuild and not kDebugDeclares then </SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Not perfect, but will emulate what you'll get in the built app</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>args = ParseStringValue(System.CommandLine)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#elseif TargetMacOS then</SourceLine>
    <SourceLine>const kCocoaLib = "Cocoa.framework"</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>declare function NSClassFromString lib kCocoaLib (aClassName as CFStringRef) as Ptr</SourceLine>
@@ -1252,16 +1261,67 @@
    <SourceLine>dim ub as integer = m_count(nsArrayRef) - 1</SourceLine>
    <SourceLine>for i as integer = 0 to ub</SourceLine>
    <SourceLine>dim s as string = objectAtIndex(nsArrayRef, i)</SourceLine>
-   <SourceLine>result.Append s</SourceLine>
+   <SourceLine>args.Append s</SourceLine>
    <SourceLine>next</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>#else</SourceLine>
+   <SourceLine>#elseif TargetWin32 then</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Windows and Linux code from Thomas Tempelmann</SourceLine>
+   <SourceLine>//</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>result = ParseStringValue(System.CommandLine) // Not perfect</SourceLine>
+   <SourceLine>declare function GetCommandLineW lib "kernel32.dll" () as Ptr</SourceLine>
+   <SourceLine>declare function CommandLineToArgvW lib "shell32.dll" (lpCmdLine As Ptr, ByRef pNumArgs As Integer) As Ptr</SourceLine>
+   <SourceLine>declare sub LocalFree Lib "kernel32.dll" (p as Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim cl as Ptr = GetCommandLineW()</SourceLine>
+   <SourceLine>dim n as Integer</SourceLine>
+   <SourceLine>dim argList as Ptr = CommandLineToArgvW (cl, n)</SourceLine>
+   <SourceLine>for idx as Integer = 0 to n-1</SourceLine>
+   <SourceLine>dim mb as MemoryBlock = argList.Ptr(idx*4)</SourceLine>
+   <SourceLine>// mb points to a UTF16 0-terminated string. It seems we have to scan its length ourselves now.</SourceLine>
+   <SourceLine>dim len as Integer</SourceLine>
+   <SourceLine>while mb.UInt16Value(len) &lt;&gt; 0</SourceLine>
+   <SourceLine>len = len + 2</SourceLine>
+   <SourceLine>wend</SourceLine>
+   <SourceLine>dim s as String = mb.StringValue(0,len).DefineEncoding(Encodings.UTF16)</SourceLine>
+   <SourceLine>s = s.ConvertEncoding(Encodings.UTF8)</SourceLine>
+   <SourceLine>args.Append s</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine>LocalFree(argList)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#elseif TargetLinux then</SourceLine>
+   <SourceLine>// read from "/proc/self/cmdline", each item is 0-terminated</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>const SystemLib = "libc.so"</SourceLine>
+   <SourceLine>declare function open lib SystemLib (path as CString, flags as Integer) As Integer</SourceLine>
+   <SourceLine>declare function read lib SystemLib (fd as Integer, data as Ptr, n as Integer) as Integer</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// first, read the entire cmdline into a string</SourceLine>
+   <SourceLine>dim fd as Integer = open ("/proc/self/cmdline", 0)</SourceLine>
+   <SourceLine>dim s as String</SourceLine>
+   <SourceLine>do</SourceLine>
+   <SourceLine>dim mb as new MemoryBlock(1000)</SourceLine>
+   <SourceLine>dim n as Integer = read (fd, mb, mb.Size)</SourceLine>
+   <SourceLine>s = s + mb.StringValue (0, n)</SourceLine>
+   <SourceLine>if n &lt; mb.Size then exit</SourceLine>
+   <SourceLine>loop</SourceLine>
+   <SourceLine>args = s.Split(Chr(0))</SourceLine>
+   <SourceLine>call args.Pop // remove last array item because of extra 00 byte at end of string</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>for i as integer = 0 to args.Ubound</SourceLine>
+   <SourceLineBreakpoint>75</SourceLineBreakpoint>
+   <SourceLine>dim thisArg as string = args(i)</SourceLine>
+   <SourceLine>if Encodings.UTF8.IsValidData(thisArg) then</SourceLine>
+   <SourceLine>args(i) = thisArg.DefineEncoding(Encodings.UTF8)</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>args(i) = thisArg.DefineEncoding(Encodings.ISOLatin1)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>next</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>#endif</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>return result</SourceLine>
+   <SourceLine>return args</SourceLine>
+   <SourceLineBreakpoint>86</SourceLineBreakpoint>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>

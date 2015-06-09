@@ -711,6 +711,45 @@
   <ItemFlags>33</ItemFlags>
   <IsShared>0</IsShared>
  </Property>
+ <Property>
+  <ItemName>HelpDescription</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Property HelpDescription As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>HelpDescription As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>dim desc() as string = Array(Description)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if AllowedValues.Ubound &lt;&gt; -1 then</SourceLine>
+   <SourceLine>dim chunk as string = "[can be one of: `" + join(AllowedValues, "', `") + "']"</SourceLine>
+   <SourceLine>desc.Append chunk</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if DisallowedValues.Ubound &lt;&gt; -1 then</SourceLine>
+   <SourceLine>dim chunk as string = "[may not be one of: `" + join(DisallowedValues, "', `") + "']"</SourceLine>
+   <SourceLine>desc.Append chunk</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>return join(desc, " ")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
  <ViewBehavior>
   <ViewProperty>
    <ObjName>Description</ObjName>
@@ -830,6 +869,11 @@
     <ItemDef>5 - File</ItemDef>
     <ItemDef>6 - Directory</ItemDef>
    </Enumeration>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>HelpDescription</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Integer</ItemType>
   </ViewProperty>
  </ViewBehavior>
  <Constant>

@@ -56,11 +56,13 @@ Inherits ConsoleApplication
 		  
 		  o = New Option("p", "person", "Person to talk to")
 		  o.IsRequired = True
+		  o.AddDisallowedValue("tommy tune")
 		  Options.AddOption o
 		  
 		  Options.AddOption New Option("m", "say-goodmorning", "Say goodmorning to person", Option.OptionType.Boolean)
 		  Options.AddOption New Option("n", "say-goodnight", "Say goodnight to person", Option.OptionType.Boolean)
 		  Options.AddOption New Option("o", "say-other", "Say some other message to person")
+		  Options.OptionValue("o").AddAllowedValue("hello", "howdy", "goodbye")
 		  
 		  o = New Option("c", "count", "Number of times to perform the action", Option.OptionType.Integer)
 		  o.MinimumNumber = 1

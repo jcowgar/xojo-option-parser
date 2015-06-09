@@ -2,7 +2,7 @@
 <RBProject version="2015r2.2" FormatVersion="2" MinIDEVersion="20070100">
 <block type="Module" ID="634229026">
  <ObjName>OptionParser</ObjName>
- <ObjContainerID>519440383</ObjContainerID>
+ <ObjContainerID>1881215597</ObjContainerID>
  <IsClass>1</IsClass>
  <ItemFlags>1</ItemFlags>
  <IsInterface>0</IsInterface>
@@ -1236,7 +1236,7 @@
    <SourceLine> Shared Function CommandLineArgs() As String()</SourceLine>
    <SourceLine>// Return an array of command-line arguments</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>const kDebugDeclares = true</SourceLine>
+   <SourceLine>const kDebugDeclares = false</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>dim args() as string</SourceLine>
    <SourceLine></SourceLine>

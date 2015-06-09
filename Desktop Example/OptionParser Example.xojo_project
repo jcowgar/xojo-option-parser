@@ -40,7 +40,7 @@ MDICaption=
 DefaultEncoding=&h0
 AppIcon=OptionParser Example.xojo_resources;&h0
 OSXBundleID=com.jcowgar.optionparserexample
-DebuggerCommandLine=--something='this" a"'\''b'
+DebuggerCommandLine=--something='a b'
 UseGDIPlus=False
 UseBuildsFolder=True
 IsWebProject=False

@@ -883,19 +883,20 @@
    <SourceLine>End If</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Dim key As String = Join(keys, ", ")</SourceLine>
+   <SourceLine>dim desc as string = opt.HelpDescription</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>If key.Len &gt; kAlignCol Or opt.Description.InStr(EndOfLine) &lt;&gt; 0 Then</SourceLine>
+   <SourceLine>If key.Len &gt; kAlignCol Or desc.InStr(EndOfLine) &lt;&gt; 0 Then</SourceLine>
    <SourceLine>helpLines.Append kIndentPrefix + key</SourceLine>
-   <SourceLine>helpLines.Append WrapTextWithIndent(opt.Description, kLineLength, descIndent)</SourceLine>
+   <SourceLine>helpLines.Append WrapTextWithIndent(desc, kLineLength, descIndent)</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>ElseIf (key.Len + opt.Description.Len) &gt; kLineLength Then</SourceLine>
+   <SourceLine>ElseIf (key.Len + desc.Len) &gt; kLineLength Then</SourceLine>
    <SourceLine>key = kIndentPrefix + PadRight(key, kAlignCol + 1)</SourceLine>
-   <SourceLine>Dim desc As String = WrapTextWithIndent(opt.Description, kLineLength, descIndent)</SourceLine>
+   <SourceLine>desc = WrapTextWithIndent(desc, kLineLength, descIndent)</SourceLine>
    <SourceLine>desc = desc.Mid(key.Len + 1)</SourceLine>
    <SourceLine>helpLines.Append key + desc</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Else</SourceLine>
-   <SourceLine>helpLines.Append kIndentPrefix + PadRight(key, kAlignCol + 1) + opt.Description</SourceLine>
+   <SourceLine>helpLines.Append kIndentPrefix + PadRight(key, kAlignCol + 1) + desc </SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>End If</SourceLine>
    <SourceLine>Next</SourceLine>

@@ -2,6 +2,49 @@
 Protected Class OptionTests
 Inherits TestGroup
 	#tag Method, Flags = &h0
+		Sub AllowedAndDisallowedTest()
+		  // Makes sure that we can't add the same value as both allowed and disallowed
+		  
+		  dim o as new Option("a", "", "")
+		  
+		  #pragma BreakOnExceptions false
+		  try
+		    o.AddAllowedValue("a", "b")
+		    o.AddDisallowedValue("b", "c")
+		    Assert.Fail("Values allowed and disallowed")
+		  catch err as OptionParserException
+		    Assert.Pass("Cannot allow and disallow values in the same option")
+		  end try
+		  #pragma BreakOnExceptions default
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub AllowedValueTest()
+		  dim o as new Option("a", "", "")
+		  o.AddAllowedValue("a", "b")
+		  
+		  #pragma BreakOnExceptions false
+		  try
+		    o.HandleValue("a")
+		    Assert.Pass("Allowed value allowed")
+		  catch err as OptionParserException
+		    Assert.Fail("Allowed value was not allowed")
+		  end try
+		  
+		  try
+		    o.HandleValue("z")
+		    Assert.Fail("Value not on allowed list was allowed")
+		  catch err as OptionParserException
+		    Assert.Pass("Value not on allowed list not allowed")
+		  end try
+		  #pragma BreakOnExceptions default
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub ArrayTest()
 		  Dim o As New Option("a", "array", "Array of Integers", Option.OptionType.Integer)
 		  o.IsArray = True
@@ -50,6 +93,30 @@ Inherits TestGroup
 		  
 		  o.HandleValue("on")
 		  Assert.IsTrue(o.Value, "on")
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub DisallowedValueTest()
+		  dim o as new Option("a", "", "")
+		  o.AddDisallowedValue("a", "b")
+		  
+		  #pragma BreakOnExceptions false
+		  try
+		    o.HandleValue("a")
+		    Assert.Fail("Disallowed value allowed")
+		  catch err as OptionParserException
+		    Assert.Pass("Disallowed value was not allowed")
+		  end try
+		  
+		  try
+		    o.HandleValue("z")
+		    Assert.Pass("Value not on disallowed list was allowed")
+		  catch err as OptionParserException
+		    Assert.Fail("Value not on disallowed list not allowed")
+		  end try
+		  #pragma BreakOnExceptions default
+		  
 		End Sub
 	#tag EndMethod
 

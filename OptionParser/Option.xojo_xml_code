@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<RBProject version="2014r2.1" FormatVersion="2" MinIDEVersion="20070100">
+<RBProject version="2015r2.2" FormatVersion="2" MinIDEVersion="20070100">
 <block type="Module" ID="1939673543">
  <ObjName>Option</ObjName>
  <ObjContainerID>1881215597</ObjContainerID>
@@ -176,6 +176,16 @@
    <SourceLine>// to an `Integer`, `Double`, `Date`, `Boolean`, `FolderItem`, etc...</SourceLine>
    <SourceLine>//</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Check to see if the value is allowed or disallowed first</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>if AllowedValues.Ubound &lt;&gt; -1 and AllowedValues.IndexOf(value) = -1 then</SourceLine>
+   <SourceLine>raise new OptionInvalidKeyValueException("The key value is not allowed: " + value)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>if DisallowedValues.Ubound &lt;&gt; -1 and DisallowedValues.IndexOf(value) &lt;&gt; -1 then</SourceLine>
+   <SourceLine>raise new OptionInvalidKeyValueException("The key value is dissallowed: " + value)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>Dim newValue As Variant</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Select Case Type</SourceLine>
@@ -235,6 +245,52 @@
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
   <ItemParams>value As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>AddAllowedValue</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub AddAllowedValue(ParamArray values() As String)</SourceLine>
+   <SourceLine>if AllowedValues.Ubound &lt;&gt; -1 then</SourceLine>
+   <SourceLine>raise new OptionParserException("You cannot set both allowed values and disallowed values")</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>for each v as string in values</SourceLine>
+   <SourceLine>AllowedValues.Append v.Trim</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>ParamArray values() As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>AddDisallowedValue</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub AddDisallowedValue(ParamArray values() As String)</SourceLine>
+   <SourceLine>if AllowedValues.Ubound &lt;&gt; -1 then</SourceLine>
+   <SourceLine>raise new OptionParserException("You cannot set both disallowed values and allowed values")</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>for each v as string in values</SourceLine>
+   <SourceLine>DisallowedValues.Append v.Trim</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>ParamArray values() As String</ItemParams>
   <ItemResult></ItemResult>
  </Method>
  <Note>
@@ -627,6 +683,73 @@
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
  </Property>
+ <Property>
+  <ItemName>AllowedValues()</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>AllowedValues() As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>AllowedValues() As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>DisallowedValues()</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>DisallowedValues() As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>DisallowedValues() As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>HelpDescription</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Property HelpDescription As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>HelpDescription As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>dim desc() as string = Array(Description)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if AllowedValues.Ubound &lt;&gt; -1 then</SourceLine>
+   <SourceLine>dim chunk as string = "[can be: `" + join(AllowedValues, "', `") + "']"</SourceLine>
+   <SourceLine>desc.Append chunk</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if DisallowedValues.Ubound &lt;&gt; -1 then</SourceLine>
+   <SourceLine>dim chunk as string = "[may not be: `" + join(DisallowedValues, "', `") + "']"</SourceLine>
+   <SourceLine>desc.Append chunk</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>return join(desc, " ")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
  <ViewBehavior>
   <ViewProperty>
    <ObjName>Description</ObjName>
@@ -732,13 +855,32 @@
    <PropertyGroup>Behavior</PropertyGroup>
    <ItemType>Boolean</ItemType>
   </ViewProperty>
+  <ViewProperty>
+   <ObjName>Type</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>OptionType</ItemType>
+   <EditorType>Enum</EditorType>
+   <Enumeration>
+    <ItemDef>0 - String</ItemDef>
+    <ItemDef>1 - Integer</ItemDef>
+    <ItemDef>2 - Double</ItemDef>
+    <ItemDef>3 - Date</ItemDef>
+    <ItemDef>4 - Boolean</ItemDef>
+    <ItemDef>5 - File</ItemDef>
+    <ItemDef>6 - Directory</ItemDef>
+   </Enumeration>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>HelpDescription</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
  </ViewBehavior>
  <Constant>
   <ItemName>kNone</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <TextEncoding>134217984</TextEncoding>
-  <ItemName>kNone</ItemName>
   <ItemType>0</ItemType>
   <ItemDef></ItemDef>
   <ItemFlags>33</ItemFlags>
@@ -748,7 +890,6 @@
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <TextEncoding>134217984</TextEncoding>
-  <ItemName>kNumberNotSet</ItemName>
   <ItemType>2</ItemType>
   <ItemDef>-32768</ItemDef>
   <ItemFlags>33</ItemFlags>

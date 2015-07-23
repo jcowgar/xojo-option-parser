@@ -2,7 +2,7 @@
 <RBProject version="2015r2.2" FormatVersion="2" MinIDEVersion="20070100">
 <block type="Module" ID="634229026">
  <ObjName>OptionParser</ObjName>
- <ObjContainerID>1881215597</ObjContainerID>
+ <ObjContainerID>519440383</ObjContainerID>
  <IsClass>1</IsClass>
  <ItemFlags>1</ItemFlags>
  <IsInterface>0</IsInterface>
@@ -1310,7 +1310,6 @@
    <SourceLine>call args.Pop // remove last array item because of extra 00 byte at end of string</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>for i as integer = 0 to args.Ubound</SourceLine>
-   <SourceLineBreakpoint>75</SourceLineBreakpoint>
    <SourceLine>dim thisArg as string = args(i)</SourceLine>
    <SourceLine>if Encodings.UTF8.IsValidData(thisArg) then</SourceLine>
    <SourceLine>args(i) = thisArg.DefineEncoding(Encodings.UTF8)</SourceLine>
@@ -1322,7 +1321,6 @@
    <SourceLine>#endif</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>return args</SourceLine>
-   <SourceLineBreakpoint>86</SourceLineBreakpoint>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>

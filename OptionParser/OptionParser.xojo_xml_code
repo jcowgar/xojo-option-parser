@@ -1332,6 +1332,96 @@
   <ItemParams></ItemParams>
   <ItemResult>String()</ItemResult>
  </Method>
+ <Method>
+  <ItemName>GetRelativeFolderItem</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function GetRelativeFolderItem(path As String, relativeTo As FolderItem = Nil) As FolderItem</SourceLine>
+   <SourceLine>Dim prefix As String = ""</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#If TargetWin32 Then</SourceLine>
+   <SourceLine>Const pathSep = "\"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Maybe what is passed isn't actually a relative path</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If path.Mid(2, 1) = ":" Then</SourceLine>
+   <SourceLine>Return GetFolderItem(path, FolderItem.PathTypeShell)</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If path.Left(1) = pathSep Then</SourceLine>
+   <SourceLine>relativeTo = GetFolderItem(SpecialFolder.CurrentWorkingDirectory.NativePath.Left(3))</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#Else</SourceLine>
+   <SourceLine>Const pathSep = "/"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Resolve home</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>if path.Left(2) = "~/" then</SourceLine>
+   <SourceLine>path = SpecialFolder.UserHome.NativePath + path.Mid(2)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// Maybe what is passed isn't actually a relative path</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If path.Left(1) = pathSep Then</SourceLine>
+   <SourceLine>Return GetFolderItem(path, FolderItem.PathTypeShell)</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>prefix = pathSep</SourceLine>
+   <SourceLine>#EndIf</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// OK, seems to be a relative path</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>If relativeTo = Nil Then</SourceLine>
+   <SourceLine>relativeTo = SpecialFolder.CurrentWorkingDirectory</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>path = relativeTo.NativePath + pathSep + path</SourceLine>
+   <SourceLine>Dim newParts() As String</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim pathParts() As String = path.Split(pathSep)</SourceLine>
+   <SourceLine>For i As Integer = 0 to pathParts.Ubound</SourceLine>
+   <SourceLine>Dim p As String = pathParts(i)</SourceLine>
+   <SourceLine>If p = "" Then</SourceLine>
+   <SourceLine>// Can happen on Windows since it appends a pathSep onto the end of NativePath</SourceLine>
+   <SourceLine>// if relativeTo is a folder.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>ElseIf p = "." Then</SourceLine>
+   <SourceLine>// Skip this path component</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>ElseIf p = ".." Then</SourceLine>
+   <SourceLine>// Remove the last path component from newParts</SourceLine>
+   <SourceLine>If newParts.Ubound &gt; -1 Then</SourceLine>
+   <SourceLine>newParts.Remove newParts.Ubound</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>// Nothing special about this path component</SourceLine>
+   <SourceLine>newParts.Append p</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>Next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>path = prefix + Join(newParts, pathSep)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return GetFolderItem(path, FolderItem.PathTypeShell)</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>1</IsShared>
+  <ItemParams>path As String, relativeTo As FolderItem = Nil</ItemParams>
+  <ItemResult>FolderItem</ItemResult>
+ </Method>
  <Note>
   <ItemName>Overview</ItemName>
   <Compatibility></Compatibility>

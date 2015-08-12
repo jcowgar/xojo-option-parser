@@ -208,13 +208,17 @@
    <SourceLine>End If</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Case OptionType.Directory</SourceLine>
+   <SourceLine>if value &lt;&gt; "" then</SourceLine>
    <SourceLine>newValue = GetRelativeFolderItem(value)</SourceLine>
+   <SourceLine>end if</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Case OptionType.Double</SourceLine>
    <SourceLine>newValue = Val(value)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Case OptionType.File</SourceLine>
+   <SourceLine>if value &lt;&gt; "" then</SourceLine>
    <SourceLine>newValue = GetRelativeFolderItem(value)</SourceLine>
+   <SourceLine>end if</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Case OptionType.Integer</SourceLine>
    <SourceLine>newValue = Val(value)</SourceLine>
@@ -717,7 +721,7 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Property HelpDescription As String</SourceLine>
+   <SourceLine>HelpDescription As String</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -873,7 +877,8 @@
   <ViewProperty>
    <ObjName>HelpDescription</ObjName>
    <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>Integer</ItemType>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
   </ViewProperty>
  </ViewBehavior>
  <Constant>

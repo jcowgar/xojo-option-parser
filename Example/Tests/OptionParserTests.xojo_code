@@ -60,6 +60,17 @@ Inherits TestGroup
 		  Assert.IsTrue o.OptionValue( "set" ).WasSet
 		  Assert.AreEqual "", o.StringValue("set")
 		  
+		  o = new OptionParser("app", "desc")
+		  o.AddOption new Option("", "set", "", Option.OptionType.File)
+		  
+		  o.Parse array("--set", "")
+		  Assert.IsTrue o.OptionValue( "set" ).WasSet
+		  Assert.IsNil o.FileValue("set")
+		  
+		  o.Parse array("--set=")
+		  Assert.IsTrue o.OptionValue( "set" ).WasSet
+		  Assert.IsNil o.FileValue("set")
+		  
 		End Sub
 	#tag EndMethod
 

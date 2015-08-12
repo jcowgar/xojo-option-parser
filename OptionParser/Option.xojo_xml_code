@@ -106,6 +106,13 @@
    <SourceLine>Const pathSep = "/"</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>//</SourceLine>
+   <SourceLine>// Resolve home</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>if path.Left(2) = "~/" then</SourceLine>
+   <SourceLine>path = SpecialFolder.UserHome.NativePath + path.Mid(2)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>//</SourceLine>
    <SourceLine>// Maybe what is passed isn't actually a relative path</SourceLine>
    <SourceLine>//</SourceLine>
    <SourceLine></SourceLine>

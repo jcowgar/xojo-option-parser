@@ -550,7 +550,9 @@
    <SourceLine>End If</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Dim equalIdx As Integer = key.InStr(2, "=") // Start at the second character</SourceLine>
+   <SourceLine>dim hasEquals as boolean</SourceLine>
    <SourceLine>If equalIdx &lt;&gt; 0 Then</SourceLine>
+   <SourceLine>hasEquals = true</SourceLine>
    <SourceLine>value = key.Mid(equalIdx + 1)</SourceLine>
    <SourceLine>key = key.Left(equalIdx - 1)</SourceLine>
    <SourceLine>End If</SourceLine>
@@ -576,7 +578,7 @@
    <SourceLine>End If</SourceLine>
    <SourceLine>End If</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>If value &lt;&gt; "" Then</SourceLine>
+   <SourceLine>If value &lt;&gt; "" or hasEquals Then</SourceLine>
    <SourceLine>// We already got the value, ignore everything else in this If</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>ElseIf opt.Type = Option.OptionType.Boolean Then</SourceLine>

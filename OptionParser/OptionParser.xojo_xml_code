@@ -480,7 +480,7 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub Parse(args() As String)</SourceLine>
+   <SourceLine>Sub Parse(args() As String, firstArgIsExecutable As Boolean = True)</SourceLine>
    <SourceLine>//</SourceLine>
    <SourceLine>// Parse the arguments</SourceLine>
    <SourceLine>//</SourceLine>
@@ -509,6 +509,14 @@
    <SourceLine>While optIdx &lt; args.Ubound // args can be rewritten in the loop</SourceLine>
    <SourceLine>optIdx = optIdx + 1</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>// If the first argument is the executable,</SourceLine>
+   <SourceLine>// we simply ignore it</SourceLine>
+   <SourceLine>//</SourceLine>
+   <SourceLine>if optIdx = 0 and firstArgIsExecutable then</SourceLine>
+   <SourceLine>continue while</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>If restAreExtras Then</SourceLine>
    <SourceLine>Extra.Append args(optIdx)</SourceLine>
    <SourceLine></SourceLine>
@@ -517,7 +525,7 @@
    <SourceLine></SourceLine>
    <SourceLine>Dim arg As String = args(optIdx)</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>If arg = "" Or arg = App.ExecutableFile.NativePath Then</SourceLine>
+   <SourceLine>If arg = "" Then</SourceLine>
    <SourceLine>Continue</SourceLine>
    <SourceLine>End If</SourceLine>
    <SourceLine></SourceLine>
@@ -635,7 +643,7 @@
   <AliasName></AliasName>
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
-  <ItemParams>args() As String</ItemParams>
+  <ItemParams>args() As String, firstArgIsExecutable As Boolean = True</ItemParams>
   <ItemResult></ItemResult>
  </Method>
  <Method>

@@ -2,6 +2,24 @@
 Protected Class OptionParserTests
 Inherits TestGroup
 	#tag Method, Flags = &h0
+		Sub FirstArgumentTest()
+		  dim parser as new OptionParser
+		  parser.AddOption new Option("", "test", "Tester", Option.OptionType.Boolean)
+		  
+		  dim args() as string = Array("executable", "--test")
+		  
+		  parser.Parse(args)
+		  Assert.AreEqual(-1, parser.Extra.Ubound)
+		  Assert.IsTrue(parser.BooleanValue("test"))
+		  
+		  parser.Parse args, false
+		  Assert.AreEqual(0, parser.Extra.Ubound)
+		  Assert.IsTrue(parser.BooleanValue("test"))
+		  Assert.AreEqual("executable", parser.Extra(0))
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub LongKeyNoBooleanTest()
 		  Dim o As New OptionParser("app", "desc")
 		  
@@ -11,7 +29,7 @@ Inherits TestGroup
 		  o.AddOption New Option("a", "abc", "ABC setting")
 		  o.AddOption New Option("b", "bcd", "BCD setting", Option.OptionType.Boolean)
 		  o.AddOption New Option("c", "cde", "CDE setting", Option.OptionType.Boolean)
-		  o.Parse(Array("--abc=JOHN", "--no-bcd", "--cde"))
+		  o.Parse(Array("--abc=JOHN", "--no-bcd", "--cde"), false)
 		  
 		  Assert.AreEqual("JOHN", o.StringValue("abc"), "abc param")
 		  Assert.IsFalse(o.BooleanValue("bcd"), "bcd param")
@@ -34,7 +52,7 @@ Inherits TestGroup
 		  o.AddOption New Option("a", "abc", "ABC setting")
 		  o.AddOption New Option("b", "bcd", "BCD setting", Option.OptionType.Boolean)
 		  o.AddOption New Option("c", "cde", "CDE setting", Option.OptionType.Boolean)
-		  o.Parse(Array("--abc=JOHN", "--bcd=No", "--cde=Yes"))
+		  o.Parse(Array("--abc=JOHN", "--bcd=No", "--cde=Yes"), false)
 		  
 		  Assert.AreEqual("JOHN", o.StringValue("abc"), "abc param")
 		  Assert.IsFalse(o.BooleanValue("bcd"), "bcd param")
@@ -52,22 +70,22 @@ Inherits TestGroup
 		  Dim o As New OptionParser("app", "desc")
 		  o.AddOption new Option("", "set", "", Option.OptionType.String)
 		  
-		  o.Parse array("--set", "")
+		  o.Parse array("--set", ""), false
 		  Assert.IsTrue o.OptionValue("set").WasSet
 		  Assert.AreEqual "", o.StringValue("set")
 		  
-		  o.Parse array("--set=")
+		  o.Parse array("--set="), false
 		  Assert.IsTrue o.OptionValue("set").WasSet
 		  Assert.AreEqual "", o.StringValue("set")
 		  
 		  o = new OptionParser("app", "desc")
 		  o.AddOption new Option("", "set", "", Option.OptionType.File)
 		  
-		  o.Parse array("--set", "")
+		  o.Parse array("--set", ""), false
 		  Assert.IsTrue o.OptionValue("set").WasSet
 		  Assert.IsNil o.FileValue("set")
 		  
-		  o.Parse array("--set=")
+		  o.Parse array("--set="), false
 		  Assert.IsTrue o.OptionValue("set").WasSet
 		  Assert.IsNil o.FileValue("set")
 		  
@@ -84,7 +102,7 @@ Inherits TestGroup
 		  o.AddOption New Option("a", "abc", "ABC setting")
 		  o.AddOption New Option("b", "bcd", "BCD setting", Option.OptionType.Boolean)
 		  o.AddOption New Option("c", "cde", "CDE setting", Option.OptionType.Boolean)
-		  o.Parse(Array("-bc", "-a", "JOHN"))
+		  o.Parse(Array("-bc", "-a", "JOHN"), false)
 		  
 		  Assert.AreEqual("JOHN", o.StringValue("abc"), "abc param")
 		  Assert.IsTrue(o.BooleanValue("bcd"), "bcd param")
@@ -106,7 +124,7 @@ Inherits TestGroup
 		  o.AddOption New Option("a", "abc", "ABC setting")
 		  o.AddOption New Option("b", "bcd", "BCD setting", Option.OptionType.Boolean)
 		  o.AddOption New Option("c", "cde", "CDE setting", Option.OptionType.Boolean)
-		  o.Parse(Array("-bca", "JOHN"))
+		  o.Parse(Array("-bca", "JOHN"), false)
 		  
 		  Assert.AreEqual("JOHN", o.StringValue("abc"), "abc param")
 		  Assert.IsTrue(o.BooleanValue("bcd"), "bcd param")
@@ -128,7 +146,7 @@ Inherits TestGroup
 		  o.AddOption New Option("a", "abc", "ABC setting")
 		  o.AddOption New Option("b", "bcd", "BCD setting", Option.OptionType.Boolean)
 		  o.AddOption New Option("c", "cde", "CDE setting", Option.OptionType.Boolean)
-		  o.Parse(Array("-a=JOHN", "-b=Yes", "-c=No"))
+		  o.Parse(Array("-a=JOHN", "-b=Yes", "-c=No"), false)
 		  
 		  Assert.AreEqual("JOHN", o.StringValue("abc"), "abc param")
 		  Assert.IsTrue(o.BooleanValue("bcd"), "bcd param")
@@ -151,7 +169,7 @@ Inherits TestGroup
 		  o.AddOption New Option("b", "bcd", "BCD setting", Option.OptionType.Boolean)
 		  o.AddOption New Option("c", "cde", "CDE setting", Option.OptionType.Boolean)
 		  
-		  o.Parse(Array("-a", "JOHN", "-b"))
+		  o.Parse(Array("-a", "JOHN", "-b"), false)
 		  
 		  Assert.AreEqual("JOHN", o.StringValue("abc"))
 		  Assert.IsTrue(o.BooleanValue("bcd"))
@@ -172,7 +190,7 @@ Inherits TestGroup
 		  p.AddOption New Option("a", "abc", "ABC")
 		  p.AddOption New Option("b", "bcd", "BCD")
 		  
-		  p.Parse(Array("-a", "john", "--", "-b", "jeff"))
+		  p.Parse(Array("-a", "john", "--", "-b", "jeff"), false)
 		  
 		  Assert.AreEqual("john", p.StringValue("abc"))
 		  Assert.AreEqual("", p.StringValue("bcd"))
@@ -198,7 +216,7 @@ Inherits TestGroup
 		  
 		  #Pragma BreakOnExceptions False
 		  Try
-		    o.Parse(Array("--date=john"))
+		    o.Parse(Array("--date=john"), false)
 		  Catch RuntimeException
 		    caughtError = True
 		  End Try
@@ -216,7 +234,7 @@ Inherits TestGroup
 		  
 		  #Pragma BreakOnExceptions False
 		  Try
-		    o.Parse(Array("--int=3"))
+		    o.Parse(Array("--int=3"), false)
 		  Catch RuntimeException
 		    caughtError = True
 		  End Try
@@ -273,7 +291,7 @@ Inherits TestGroup
 		  Dim fi As FolderItem = App.ExecutableFile
 		  
 		  o.Parse(Array("--date=01/15/2014", "--file=" + fi.ShellPath, "--dir=" + fi.Parent.ShellPath, _
-		  "--int=15", "--dbl=19.94"))
+		  "--int=15", "--dbl=19.94"), false)
 		  
 		End Sub
 	#tag EndMethod

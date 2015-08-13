@@ -3,9 +3,9 @@ Protected Class App
 Inherits Application
 	#tag Event
 		Sub Open()
-		  MsgBox "Command line: " + EndOfLine + EndOfLine + System.CommandLine
-		  
 		  dim args() as string = OptionParser.CommandLineArgs
+		  
+		  MsgBox "Command line: " + EndOfLine + EndOfLine + join(args, " ")
 		  
 		  dim parser as new OptionParser("Example", "")
 		  parser.AddOption new Option("s", "something", "")

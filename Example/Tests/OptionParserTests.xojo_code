@@ -2,6 +2,24 @@
 Protected Class OptionParserTests
 Inherits TestGroup
 	#tag Method, Flags = &h0
+		Sub FirstArgumentTest()
+		  dim parser as new OptionParser
+		  parser.AddOption new Option("", "test", "Tester", Option.OptionType.Boolean)
+		  
+		  dim args() as string = Array("executable", "--test")
+		  
+		  parser.Parse(args)
+		  Assert.AreEqual(-1, parser.Extra.Ubound)
+		  Assert.IsTrue(parser.BooleanValue("test"))
+		  
+		  parser.Parse args, false
+		  Assert.AreEqual(0, parser.Extra.Ubound)
+		  Assert.IsTrue(parser.BooleanValue("test"))
+		  Assert.AreEqual("executable", parser.Extra(0))
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub LongKeyNoBooleanTest()
 		  Dim o As New OptionParser("app", "desc")
 		  

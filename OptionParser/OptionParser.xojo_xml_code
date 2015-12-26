@@ -586,6 +586,14 @@
    <SourceLine>End If</SourceLine>
    <SourceLine>End If</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>if opt isa Option and opt.CanReadValueFromPath and value.Left(1) = "@" then</SourceLine>
+   <SourceLine>dim filename as String = value.Mid(2)</SourceLine>
+   <SourceLine>dim fh as FolderItem = GetRelativeFolderItem(filename)</SourceLine>
+   <SourceLine>dim tis as TextInputStream = TextInputStream.Open(fh)</SourceLine>
+   <SourceLine>value = tis.ReadAll</SourceLine>
+   <SourceLine>tis.Close</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>If value &lt;&gt; "" or hasEquals Then</SourceLine>
    <SourceLine>// We already got the value, ignore everything else in this If</SourceLine>
    <SourceLine></SourceLine>
@@ -879,6 +887,10 @@
    <SourceLine>keyString = keyString + " " + opt.TypeString</SourceLine>
    <SourceLine>End If</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>if opt.CanReadValueFromPath then</SourceLine>
+   <SourceLine>keyString = keyString + "|@FILE"</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>keys.Append keyString</SourceLine>
    <SourceLine>End If</SourceLine>
    <SourceLine></SourceLine>
@@ -888,6 +900,10 @@
    <SourceLine>If opt.Type &lt;&gt; Option.OptionType.Boolean Then</SourceLine>
    <SourceLine>keyString = keyString + "=" + opt.TypeString</SourceLine>
    <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if opt.CanReadValueFromPath then</SourceLine>
+   <SourceLine>keyString = keyString + "|@FILE"</SourceLine>
+   <SourceLine>end if</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>keys.Append keyString</SourceLine>
    <SourceLine>End If</SourceLine>

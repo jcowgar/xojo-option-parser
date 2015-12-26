@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<RBProject version="2015r2.3" FormatVersion="2" MinIDEVersion="20070100">
+<RBProject version="2015r4" FormatVersion="2" MinIDEVersion="20070100">
 <block type="Module" ID="1939673543">
  <ObjName>Option</ObjName>
- <ObjContainerID>1881215597</ObjContainerID>
+ <ObjContainerID>519440383</ObjContainerID>
  <IsClass>1</IsClass>
  <ItemFlags>1</ItemFlags>
  <IsInterface>0</IsInterface>
@@ -671,6 +671,20 @@
    <SourceLine>End Get</SourceLine>
   </GetAccessor>
  </Property>
+ <Property>
+  <ItemName>CanReadValueFromPath</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>CanReadValueFromPath As Boolean</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>CanReadValueFromPath As Boolean</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
  <ViewBehavior>
   <ViewProperty>
    <ObjName>Description</ObjName>
@@ -796,6 +810,11 @@
    <PropertyGroup>Behavior</PropertyGroup>
    <ItemType>String</ItemType>
    <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>CanReadValueFromPath</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Integer</ItemType>
   </ViewProperty>
  </ViewBehavior>
  <Constant>

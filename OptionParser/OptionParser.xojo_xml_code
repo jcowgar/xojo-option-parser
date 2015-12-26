@@ -1430,6 +1430,31 @@
   <ItemParams>path As String, relativeTo As FolderItem = Nil</ItemParams>
   <ItemResult>FolderItem</ItemResult>
  </Method>
+ <Method>
+  <ItemName>Parse</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Parse(argString As String, firstArgIsExecutable As Boolean = False)</SourceLine>
+   <SourceLine>dim args() as string</SourceLine>
+   <SourceLine>if firstArgIsExecutable then</SourceLine>
+   <SourceLine>args = ParseStringValue(argString)</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>ParseRestOfString argString, args</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Parse args, FirstArgIsExecutable</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>argString As String, firstArgIsExecutable As Boolean = False</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
  <Note>
   <ItemName>Overview</ItemName>
   <Compatibility></Compatibility>

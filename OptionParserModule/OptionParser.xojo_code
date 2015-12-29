@@ -660,6 +660,10 @@ Class OptionParser
 		    End If
 		    
 		    if opt isa Option and opt.CanReadValueFromPath and value.Left(1) = "@" then
+		    //
+		    // Value wants to be read from a file
+		    //
+		    
 		      dim filename as String = value.Mid(2)
 		      dim fh as FolderItem = GetRelativeFolderItem(filename)
 		      dim tis as TextInputStream = TextInputStream.Open(fh)

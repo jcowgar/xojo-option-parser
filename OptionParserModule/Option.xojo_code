@@ -56,32 +56,102 @@ Class Option
 		  //
 		  
 		  // Validate and cleanup
-		  shortKey = shortKey.Trim
-		  longKey = longKey.Trim
-		  description = ReplaceLineEndings(description.Trim, EndOfLine)
+		  if not ValidateKey(shortKey) then
+		    raise new OptionParserException("Invalid Short Key: '" + shortKey + "'")
+		  end if
+		  If shortKey.Len > 1 Then
+		    Raise New OptionParserException("Short Key is optional but may only be one character: '" + shortKey + "'")
+		  End If
 		  
-		  While shortKey.Left(1) = "-"
-		    shortKey = shortKey.Mid(2).Trim
-		  Wend
-		  While longKey.Left(1) = "-"
-		    longKey = longKey.Mid(2).Trim
-		  Wend
+		  if not ValidateKey(longKey) then
+		    raise new OptionParserException("Invalid Long Key: '" + longKey + "'")
+		  end if
+		  If longKey.Len = 1 Then
+		    Raise New OptionParserException("Long Key is optional but must be more than one character: '" + longKey + "'")
+		  End If
 		  
 		  If shortKey = "" and longKey = "" Then
 		    Raise New OptionParserException("Option must specify at least one key.")
 		  End If
-		  If shortKey.Len > 1 Then
-		    Raise New OptionParserException("Short Key is optional but may only be one character: " + shortKey)
-		  End If
-		  If longKey.Len = 1 Then
-		    Raise New OptionParserException("Long Key is optional but must be more than one character: " + longKey)
-		  End If
 		  
-		  Self.ShortKey = shortKey
-		  Self.LongKey = longKey
+		  mShortKey = shortKey
+		  mLongKey = longKey
+		  
 		  Self.Description = description
 		  Self.Type = type
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function GetRelativeFolderItem(path As String, relativeTo As FolderItem = Nil) As FolderItem
+		  Dim prefix As String = ""
+		  
+		  #If TargetWin32 Then
+		    Const pathSep = "\"
+		    
+		    //
+		    // Maybe what is passed isn't actually a relative path
+		    //
+		    
+		    If path.Mid(2, 1) = ":" Then
+		      Return GetFolderItem(path, FolderItem.PathTypeShell)
+		    End If
+		    
+		    If path.Left(1) = pathSep Then
+		      relativeTo = GetFolderItem(SpecialFolder.CurrentWorkingDirectory.NativePath.Left(3))
+		    End If
+		    
+		  #Else
+		    Const pathSep = "/"
+		    
+		    //
+		    // Maybe what is passed isn't actually a relative path
+		    //
+		    
+		    If path.Left(1) = pathSep Then
+		      Return GetFolderItem(path, FolderItem.PathTypeShell)
+		    End If
+		    
+		    prefix = pathSep
+		  #EndIf
+		  
+		  //
+		  // OK, seems to be a relative path
+		  //
+		  
+		  If relativeTo = Nil Then
+		    relativeTo = SpecialFolder.CurrentWorkingDirectory
+		  End If
+		  
+		  path = relativeTo.NativePath + pathSep + path
+		  Dim newParts() As String
+		  
+		  Dim pathParts() As String = path.Split(pathSep)
+		  For i As Integer = 0 to pathParts.Ubound
+		    Dim p As String = pathParts(i)
+		    If p = "" Then
+		      // Can happen on Windows since it appends a pathSep onto the end of NativePath
+		      // if relativeTo is a folder.
+		      
+		    ElseIf p = "." Then
+		      // Skip this path component
+		      
+		    ElseIf p = ".." Then
+		      // Remove the last path component from newParts
+		      If newParts.Ubound > -1 Then
+		        newParts.Remove newParts.Ubound
+		      End If
+		      
+		    Else
+		      // Nothing special about this path component
+		      newParts.Append p
+		    End If
+		  Next
+		  
+		  path = prefix + Join(newParts, pathSep)
+		  
+		  Return GetFolderItem(path, FolderItem.PathTypeShell)
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -93,6 +163,27 @@ Class Option
 		  // by the user to the actual `OptionType`, for example, converts a `String`
 		  // to an `Integer`, `Double`, `Date`, `Boolean`, `FolderItem`, etc...
 		  //
+		  
+		  //
+		  // See if value wants to be read from a file
+		  //
+		  if CanReadValueFromPath and value.Left(1) = "@" then
+		    dim filename as String = value.Mid(2)
+		    try
+		      dim fh as FolderItem = OptionParser.GetRelativeFolderItem(filename)
+		      dim tis as TextInputStream = TextInputStream.Open(fh)
+		      dim newValue as string = tis.ReadAll
+		      tis.Close
+		      value = newValue
+		      
+		    catch err as RuntimeException
+		      if err isa EndException or err isa ThreadEndException then
+		        raise err
+		      end if
+		      
+		      raise new OptionInvalidKeyValueException("Could not read option file: " + value)
+		    end try
+		  end if
 		  
 		  //
 		  // Check to see if the value is allowed or disallowed first
@@ -163,6 +254,39 @@ Class Option
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function LongKey() As String
+		  return mLongKey
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ShortKey() As String
+		  return mShortKey
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function ValidateKey(ByRef key As String) As Boolean
+		  static rx as RegEx
+		  if rx is nil then
+		    rx = new RegEx
+		    rx.SearchPattern = "[^\-_A-Z0-9]"
+		  end if
+		  
+		  //
+		  // The pattern excludes the acceptible characters.
+		  // This means there should be no match within the key.
+		  //
+		  
+		  while key.Left(1) = "-"
+		    key = key.Mid(2)
+		  wend
+		  
+		  return rx.Search(key) = nil
+		End Function
+	#tag EndMethod
+
 
 	#tag Note, Name = Enums
 		### OptionType
@@ -188,18 +312,30 @@ Class Option
 		CanReadValueFromPath As Boolean
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
-		#tag Note
-			Description that will appear in the application help for this option.
-		#tag EndNote
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  return mDescription
+			End Get
+		#tag EndGetter
+		#tag Setter
+			Set
+			  value = ReplaceLineEndings(value, EndOfLine).Trim
+			  
+			  mDescription = value
+			End Set
+		#tag EndSetter
 		Description As String
-	#tag EndProperty
+	#tag EndComputedProperty
 
 	#tag Property, Flags = &h21
 		Private DisallowedValues() As String
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0
+		#tag Note
+			Description that will appear in the application help for this Option
+		#tag EndNote
 		#tag Getter
 			Get
 			  dim desc() as string = Array(Description)
@@ -326,7 +462,7 @@ Class Option
 			date. If the validation fails a `OptionInvalidKeyValueException` exception will be raised.
 			
 			**NOTE:** This does not mean that the option is required. It simply means that if supplied, the
-			option needs to be a valid date. If you want to make sure that the option is both a readable 
+			option needs to be a valid date. If you want to make sure that the option is both a readable
 			date and required, one should also set `IsRequired=True`.
 		#tag EndNote
 		IsValidDateRequired As Boolean
@@ -347,6 +483,32 @@ Class Option
 
 	#tag Property, Flags = &h0
 		#tag Note
+			Set a maximum limit to an `Integer` or `Double` option type.
+			
+			**NOTE:** This does not mean that the option is required. It simply means that if supplied, the
+			option needs to be no more than this. If you want to make sure that the option has a maximum value
+			and is required, one should also set `IsRequired=True`.
+		#tag EndNote
+		MaximumNumber As Double = kNumberNotSet
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mDescription As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		#tag Note
+			Set a minimum limit to an `Integer` or `Double` option type.
+			
+			**NOTE:** This does not mean that the option is required. It simply means that if supplied, the
+			option needs to be no less than this. If you want to make sure that the option has a minimum value
+			and is required, one should also set `IsRequired=True`.
+		#tag EndNote
+		MinimumNumber As Double = kNumberNotSet
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		#tag Note
 			An option can have a short and long key. This is the long key. A key is what the user
 			supplies on the command line to supply a particular value to a given option.
 			
@@ -361,32 +523,10 @@ Class Option
 			Hello John!
 			```
 		#tag EndNote
-		LongKey As String
+		Private mLongKey As String
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
-		#tag Note
-			Set a maximum limit to an `Integer` or `Double` option type.
-			
-			**NOTE:** This does not mean that the option is required. It simply means that if supplied, the
-			option needs to be no more than this. If you want to make sure that the option has a maximum value
-			and is required, one should also set `IsRequired=True`.
-		#tag EndNote
-		MaximumNumber As Double = kNumberNotSet
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		#tag Note
-			Set a minimum limit to an `Integer` or `Double` option type.
-			
-			**NOTE:** This does not mean that the option is required. It simply means that if supplied, the
-			option needs to be no less than this. If you want to make sure that the option has a minimum value
-			and is required, one should also set `IsRequired=True`.
-		#tag EndNote
-		MinimumNumber As Double = kNumberNotSet
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
+	#tag Property, Flags = &h21
 		#tag Note
 			An option can have a short and long key. This is the short key. A key is what the user
 			supplies on the command line to supply a particular value to a given option.
@@ -402,7 +542,7 @@ Class Option
 			Hello John!
 			```
 		#tag EndNote
-		ShortKey As String
+		Private mShortKey As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -545,12 +685,6 @@ Class Option
 			Type="Integer"
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="LongKey"
-			Group="Behavior"
-			Type="String"
-			EditorType="MultiLineEditor"
-		#tag EndViewProperty
-		#tag ViewProperty
 			Name="MaximumNumber"
 			Group="Behavior"
 			InitialValue="kNumberNotSet"
@@ -567,12 +701,6 @@ Class Option
 			Visible=true
 			Group="ID"
 			Type="String"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="ShortKey"
-			Group="Behavior"
-			Type="String"
-			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Super"

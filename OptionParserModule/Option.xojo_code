@@ -165,6 +165,27 @@ Class Option
 		  //
 		  
 		  //
+		  // See if value wants to be read from a file
+		  //
+		  if CanReadValueFromPath and value.Left(1) = "@" then
+		    dim filename as String = value.Mid(2)
+		    try
+		      dim fh as FolderItem = OptionParser.GetRelativeFolderItem(filename)
+		      dim tis as TextInputStream = TextInputStream.Open(fh)
+		      dim newValue as string = tis.ReadAll
+		      tis.Close
+		      value = newValue
+		      
+		    catch err as RuntimeException
+		      if err isa EndException or err isa ThreadEndException then
+		        raise err
+		      end if
+		      
+		      raise new OptionInvalidKeyValueException("Could not read option file: " + value)
+		    end try
+		  end if
+		  
+		  //
 		  // Check to see if the value is allowed or disallowed first
 		  //
 		  if AllowedValues.Ubound <> -1 and AllowedValues.IndexOf(value) = -1 then

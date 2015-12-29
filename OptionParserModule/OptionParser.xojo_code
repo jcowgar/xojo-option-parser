@@ -639,7 +639,7 @@ Class OptionParser
 		    End If
 		    
 		    Dim opt As Option = OptionValue(key)
-		    If opt = Nil Then
+		    If opt is Nil Then
 		      //
 		      // Maybe the user has specified --no-option which should set a
 		      // boolean value to False
@@ -652,7 +652,7 @@ Class OptionParser
 		      key = key.Mid(4)
 		      opt = OptionValue(key)
 		      
-		      If opt = Nil Or opt.Type <> Option.OptionType.Boolean Then
+		      If opt is Nil Or opt.Type <> Option.OptionType.Boolean Then
 		        RaiseUnrecognizedKeyException(key)
 		      Else
 		        value = "No"

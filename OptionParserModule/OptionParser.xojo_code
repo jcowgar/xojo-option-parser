@@ -213,7 +213,7 @@ Class OptionParser
 		  Self.AppDescription = appDescription
 		  
 		  Dim helpOption As New Option("h", "help", "Show help", Option.OptionType.Boolean)
-		  AddOption  helpOption
+		  AddOption helpOption
 		  
 		End Sub
 	#tag EndMethod
@@ -436,6 +436,12 @@ Class OptionParser
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function HasOption(key as String) As Boolean
+		  return not (OptionValue(key) is nil)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function IntegerValue(key As Variant, defaultValue As Integer = 0) As Integer
 		  //
 		  // Retrieve the contents of an option as a `Integer` value.
@@ -463,6 +469,21 @@ Class OptionParser
 		  #else
 		    return (char = """" or char = "'")
 		  #endif
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function KeyToDictKey(key As String) As String
+		  while key.Left(1) = "-"
+		    key = key.Mid(2)
+		  wend
+		  
+		  if key.Len = 1 then
+		    return "-" + str(key.Asc)
+		  else
+		    return key
+		  end if
+		  
 		End Function
 	#tag EndMethod
 
@@ -1124,6 +1145,12 @@ Class OptionParser
 	#tag EndMethod
 
 
+	#tag Note, Name = Features to Add
+		
+		- Default values for given options.
+		- Switch aliases (short and long).
+	#tag EndNote
+
 	#tag Note, Name = How to supply command line parameters
 		`OptionParser` is versitle on it's use of command line options.
 		
@@ -1175,6 +1202,18 @@ Class OptionParser
 		command line, populating the associated `Option`s and validating it as a whole.
 	#tag EndNote
 
+	#tag Note, Name = Usage
+		Key can be the short or long option name.
+		
+		.Value(key) = Variant value
+		.OptionValue(key) = Option instance
+		.StringValue, .DateValue, .BooleanValue, etc... = Variant type cast to the appropriate result type
+		
+		Some Value accessors can return Nil, such as DateValue and FileValue. Others have a default return value
+		if the default isn't sent to the method such as BooleanValue, DoubleValue, etc...
+		
+	#tag EndNote
+
 
 	#tag ComputedProperty, Flags = &h0
 		#tag Note
@@ -1183,7 +1222,6 @@ Class OptionParser
 			
 			This can be used to provide further usage notes and to expand on options
 			when a single line description is not sufficient.
-			
 		#tag EndNote
 		#tag Getter
 			Get
@@ -1202,7 +1240,6 @@ Class OptionParser
 		#tag Note
 			Typically a single line description of the application that is displayed
 			before the application help.
-			
 		#tag EndNote
 		AppDescription As String
 	#tag EndProperty
@@ -1210,7 +1247,7 @@ Class OptionParser
 	#tag Property, Flags = &h0
 		#tag Note
 			Name of the application. If empty, `OptionParser` will assign the `AppName`
-			variable to the name of the executable filename. This is displayed when 
+			variable to the name of the executable filename. This is displayed when
 			user help is shown.
 		#tag EndNote
 		AppName As String

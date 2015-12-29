@@ -5,28 +5,36 @@ Protected Class TestResult
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Message As String
+		IncludeMethod As Boolean = True
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Result As String
+		Message As Text
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		TestName As String
+		MethodInfo As Xojo.Introspection.MethodInfo
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		Result As Text
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		TestName As Text
 	#tag EndProperty
 
 
-	#tag Constant, Name = Failed, Type = String, Dynamic = False, Default = \"Failed", Scope = Public
+	#tag Constant, Name = Failed, Type = Text, Dynamic = False, Default = \"Failed", Scope = Public
 	#tag EndConstant
 
-	#tag Constant, Name = NotImplemented, Type = String, Dynamic = False, Default = \"n/a", Scope = Public
+	#tag Constant, Name = NotImplemented, Type = Text, Dynamic = False, Default = \"n/a", Scope = Public
 	#tag EndConstant
 
-	#tag Constant, Name = Passed, Type = String, Dynamic = False, Default = \"Passed", Scope = Public
+	#tag Constant, Name = Passed, Type = Text, Dynamic = False, Default = \"Passed", Scope = Public
 	#tag EndConstant
 
-	#tag Constant, Name = Skipped, Type = String, Dynamic = False, Default = \"Skipped", Scope = Public
+	#tag Constant, Name = Skipped, Type = Text, Dynamic = False, Default = \"Skipped", Scope = Public
 	#tag EndConstant
 
 
@@ -35,6 +43,12 @@ Protected Class TestResult
 			Name="Duration"
 			Group="Behavior"
 			Type="Double"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IncludeMethod"
+			Group="Behavior"
+			InitialValue="True"
+			Type="Boolean"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
@@ -53,7 +67,7 @@ Protected Class TestResult
 		#tag ViewProperty
 			Name="Message"
 			Group="Behavior"
-			Type="String"
+			Type="Text"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -65,7 +79,7 @@ Protected Class TestResult
 		#tag ViewProperty
 			Name="Result"
 			Group="Behavior"
-			Type="String"
+			Type="Text"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -77,7 +91,7 @@ Protected Class TestResult
 		#tag ViewProperty
 			Name="TestName"
 			Group="Behavior"
-			Type="String"
+			Type="Text"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty

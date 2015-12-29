@@ -15,11 +15,10 @@ Protected Class TestGroup
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(controller As TestController, groupName As String)
-		  mController = controller
+		Sub Constructor(controller As TestController, groupName As Text)
 		  Name = groupName
 		  
-		  mController.AddGroup(Self)
+		  controller.AddGroup(Self)
 		  
 		  mAssert = New Assert
 		  mAssert.Group = Self
@@ -39,25 +38,26 @@ Protected Class TestGroup
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Sub ErrorIf(condition As Boolean, message As String)
+		Protected Sub ErrorIf(condition As Boolean, message As Text)
 		  Assert.IsFalse(condition, message)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
 		Private Sub GetTestMethods()
-		  Dim info As Introspection.TypeInfo
+		  Dim info As Xojo.Introspection.TypeInfo
 		  
-		  info = Introspection.GetType(Self)
+		  info = Xojo.Introspection.GetType(Self)
 		  
-		  Dim methods() As Introspection.MethodInfo
-		  methods = info.GetMethods
+		  Dim methods() As Xojo.Introspection.MethodInfo
+		  methods = info.Methods
 		  
-		  For Each m As Introspection.MethodInfo In methods
-		    If m.Name.Right(4) = kTestSuffix Then
+		  For Each m As Xojo.Introspection.MethodInfo In methods
+		    If m.Name.Right(kTestSuffix.Length) = kTestSuffix Then
 		      // Initialize test results
 		      Dim tr As New TestResult
-		      tr.TestName = m.Name.Left(m.Name.Len-Len(kTestSuffix))
+		      tr.TestName = m.Name.Left(m.Name.Length - kTestSuffix.Length)
+		      tr.MethodInfo = m
 		      tr.Result = TestResult.NotImplemented
 		      
 		      mResults.Append(tr)
@@ -68,7 +68,7 @@ Protected Class TestGroup
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Function GetTestResult(testName As String) As TestResult
+		Private Function GetTestResult(testName As Text) As TestResult
 		  For Each tr As TestResult In mResults
 		    If tr.TestName + kTestSuffix = testName Then
 		      Return tr
@@ -85,41 +85,49 @@ Protected Class TestGroup
 
 	#tag Method, Flags = &h21
 		Private Sub RunTests()
-		  Dim info As Introspection.TypeInfo
-		  
-		  info = Introspection.GetType(Self)
-		  
-		  Dim methods() As Introspection.MethodInfo
-		  methods = info.GetMethods
-		  
-		  For Each m As Introspection.MethodInfo In methods
-		    Dim param() As Variant
-		    Dim rv As Variant
-		    
-		    If m.Name.Right(4) = kTestSuffix Then
-		      
-		      Try
-		        CurrentTestResult = GetTestResult(m.Name)
-		        
-		        StartTimer
-		        rv = m.Invoke(Self, param)
-		        EndTimer
-		        
-		      Catch e As RuntimeException
-		        Dim eInfo As Introspection.TypeInfo
-		        eInfo = Introspection.GetType(e)
-		        
-		        Dim errorMessage As String
-		        errorMessage = "A " + eInfo.FullName + " occurred and was caught."
-		        If e.Message <> "" Then
-		          errorMessage = errorMessage + EndOfLine + "Message: " + e.Message
-		        End If
-		        Assert.Fail(errorMessage)
-		      End Try
-		      
+		  For Each result As TestResult In mResults
+		    If Not result.IncludeMethod Then
+		      result.Result = Result.Skipped
+		      Continue For result
 		    End If
 		    
+		    Dim param() As Auto
+		    Dim rv As Auto
+		    
+		    Try
+		      CurrentTestResult = result
+		      Dim method As Xojo.Introspection.MethodInfo = result.MethodInfo
+		      
+		      StartTimer
+		      rv = method.Invoke(Self, param)
+		      EndTimer
+		      
+		    Catch e As RuntimeException
+		      If e IsA EndException Or e IsA ThreadEndException Then
+		        Raise e
+		      End If
+		      
+		      Dim eInfo As Xojo.Introspection.TypeInfo
+		      eInfo = Xojo.Introspection.GetType(e)
+		      
+		      Dim errorMessage As Text
+		      errorMessage = "A " + eInfo.FullName + " occurred and was caught."
+		      If e.Reason <> "" Then
+		        errorMessage = errorMessage + &u0A + "Message: " + e.Reason
+		      End If
+		      Assert.Fail(errorMessage)
+		    End Try
+		    
 		  Next
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub SetIncludeMethods(value As Boolean)
+		  For Each result As TestResult In Results
+		    result.IncludeMethod = value
+		  Next 
+		  
 		End Sub
 	#tag EndMethod
 
@@ -168,6 +176,23 @@ Protected Class TestGroup
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
+			  Dim _duration As Double = 0
+			  
+			  For Each tr As TestResult In mResults
+			    If tr.Result = TestResult.Passed Or tr.Result = TestResult.Failed Then
+			      _duration = _duration + tr.Duration
+			    End If
+			  Next
+			  
+			  Return _duration
+			End Get
+		#tag EndGetter
+		Duration As Double
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
 			  Dim testCount As Integer
 			  
 			  For Each tr As TestResult In mResults
@@ -191,10 +216,6 @@ Protected Class TestGroup
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private mController As TestController
-	#tag EndProperty
-
-	#tag Property, Flags = &h21
 		Private mResults() As TestResult
 	#tag EndProperty
 
@@ -203,7 +224,7 @@ Protected Class TestGroup
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Name As String
+		Name As Text
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0
@@ -267,11 +288,16 @@ Protected Class TestGroup
 	#tag EndComputedProperty
 
 
-	#tag Constant, Name = kTestSuffix, Type = String, Dynamic = False, Default = \"Test", Scope = Private
+	#tag Constant, Name = kTestSuffix, Type = Text, Dynamic = False, Default = \"Test", Scope = Public
 	#tag EndConstant
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="Duration"
+			Group="Behavior"
+			Type="Double"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="FailedTestCount"
 			Group="Behavior"

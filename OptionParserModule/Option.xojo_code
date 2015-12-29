@@ -288,6 +288,48 @@ Implements ParserOption
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Function ValidateValue(value As Variant) As Boolean
+		  Select Case Type
+		  Case OptionType.Date
+		    If IsValidDateRequired Then
+		      Dim d As Date = value
+		      
+		      If d Is Nil Then
+		        Return False
+		      End If
+		    End If
+		    
+		  Case OptionType.Directory, OptionType.File
+		    Dim fi As FolderItem = value
+		    
+		    If IsRequired Or WasSet Then
+		      If IsReadableRequired And (fi Is Nil Or fi.IsReadable = False) Then
+		        Return False
+		      End If
+		      
+		      If IsWriteableRequired And (fi Is Nil Or fi.IsWriteable = False) Then
+		        Return False
+		      End If
+		    End If
+		    
+		  Case OptionType.Double, OptionType.Integer
+		    Dim d As Double = value
+		    
+		    If MinimumNumber <> kNumberNotSet And d < MinimumNumber Then
+		      Return False
+		    End If
+		    
+		    If MaximumNumber <> kNumberNotSet And d > MaximumNumber Then
+		      Return False
+		    End If
+		  End Select
+		  
+		  return true
+		  
+		End Function
+	#tag EndMethod
+
 
 	#tag Note, Name = Enums
 		### OptionType
@@ -415,40 +457,24 @@ Implements ParserOption
 			  End If
 			  
 			  If IsRequired Or WasSet Then
-			    Select Case Type
-			    Case OptionType.Date
-			      If IsValidDateRequired Then
-			        Dim d As Date = Value
-			        
-			        If d Is Nil Then
-			          Return False
-			        End If
-			      End If
+			    
+			    if IsArray then
 			      
-			    Case OptionType.Directory, OptionType.File
-			      Dim fi As FolderItem = Value
+			      dim ary() as variant = Value
+			      for each v as variant in ary
+			        if not ValidateValue(v) then
+			          return false
+			        end if
+			      next
 			      
-			      If IsRequired Or WasSet Then
-			        If IsReadableRequired And (fi Is Nil Or fi.IsReadable = False) Then
-			          Return False
-			        End If
-			        
-			        If IsWriteableRequired And (fi Is Nil Or fi.IsWriteable = False) Then
-			          Return False
-			        End If
-			      End If
+			      return true
 			      
-			    Case OptionType.Double, OptionType.Integer
-			      Dim d As Double = Value
+			    else
 			      
-			      If MinimumNumber <> kNumberNotSet And d < MinimumNumber Then
-			        Return False
-			      End If
+			      return ValidateValue(Value)
 			      
-			      If MaximumNumber <> kNumberNotSet And d > MaximumNumber Then
-			        Return False
-			      End If
-			    End Select
+			    end if
+			    
 			  End If
 			  
 			  Return True

@@ -13,10 +13,13 @@ Class OptionParser
 		  // short or long key as an existing option.
 		  
 		  // Validation
-		  If o.ShortKey <> "" And Dict.HasKey(o.ShortKey.Asc) Then
+		  dim shortKey as string = KeyToDictKey(o.ShortKey)
+		  dim longKey as string = KeyToDictKey(o.LongKey)
+		  
+		  If shortKey <> "" And Dict.HasKey(shortKey) Then
 		    Raise New OptionParserException("You can't add the same short key more than once: " + o.ShortKey)
 		  End If
-		  If o.LongKey <> "" And Dict.HasKey(o.LongKey) Then
+		  If longKey <> "" And Dict.HasKey(longKey) Then
 		    Raise New OptionParserException("You can't add the same long key more than once: " + o.LongKey)
 		  End If
 		  If o.ShortKey = "?" Then
@@ -25,12 +28,12 @@ Class OptionParser
 		  
 		  Options.Append o
 		  
-		  If o.ShortKey <> "" Then
-		    Dict.Value(o.ShortKey.Asc) = o
+		  If shortKey <> "" Then
+		    Dict.Value(shortKey) = o
 		  End If
 		  
-		  If o.LongKey <> "" Then
-		    Dict.Value(o.LongKey) = o
+		  If longKey <> "" Then
+		    Dict.Value(longKey) = o
 		  End If
 		End Sub
 	#tag EndMethod
@@ -528,14 +531,7 @@ Class OptionParser
 		  // One can use this to check the `WasSet` property of the `Option` class.
 		  //
 		  
-		  Dim lookupKey As Variant = key
-		  
-		  If Not Dict.HasKey(lookupKey) Then
-		    If key.Len = 1 Then
-		      lookupKey = key.Asc
-		    End If
-		  End If
-		  
+		  Dim lookupKey As Variant = KeyToDictKey(key)
 		  Return Dict.Lookup(lookupKey, Nil)
 		End Function
 	#tag EndMethod
@@ -702,7 +698,9 @@ Class OptionParser
 		  
 		  If Not Self.HelpRequested Then
 		    If ExtrasRequired > 0 And Extra.Ubound < (ExtrasRequired - 1) Then
+		      #pragma BreakOnExceptions false
 		      Raise New OptionParserException("Insufficient extras specified")
+		      #pragma BreakOnExceptions default
 		    End If
 		    
 		    For Each o As Option In Options
@@ -1058,13 +1056,13 @@ Class OptionParser
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Function Value(key As Variant) As Variant
-		  Dim vk As String = key
-		  Dim v As Variant = Dict.Lookup(vk, Nil)
+		Private Function Value(key As String) As Variant
+		  key = KeyToDictKey(key)
+		  if key = "" then
+		    return nil
+		  end if
 		  
-		  If v = Nil Then
-		    v = Dict.Lookup(vk.Asc, Nil)
-		  End If
+		  Dim v As Variant = Dict.Lookup(key, Nil)
 		  
 		  If v <> Nil Then
 		    Return Option(v).Value

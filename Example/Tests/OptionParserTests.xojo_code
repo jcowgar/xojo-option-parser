@@ -9,7 +9,7 @@ Inherits TestGroup
 		  try
 		    parser.Parse "-a"
 		    Assert.Fail "Switch '-a' should have failed"
-		  catch err as OptionMissingKeyException
+		  catch err as OptionUnrecognizedKeyException
 		    Assert.Pass "Switch '-a' failed as expected"
 		  end try
 		  #pragma BreakOnExceptions default
@@ -314,6 +314,11 @@ Inherits TestGroup
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="Duration"
+			Group="Behavior"
+			Type="Double"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="FailedTestCount"
 			Group="Behavior"

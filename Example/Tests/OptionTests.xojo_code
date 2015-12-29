@@ -24,17 +24,19 @@ Inherits TestGroup
 		Sub AllowedValueTest()
 		  dim o as new Option("a", "", "")
 		  o.AddAllowedValue("a", "b")
+		  dim parser as new OptionParser
+		  parser.AddOption o
 		  
 		  #pragma BreakOnExceptions false
 		  try
-		    o.HandleValue("a")
+		    parser.Parse "-a a"
 		    Assert.Pass("Allowed value allowed")
 		  catch err as OptionParserException
 		    Assert.Fail("Allowed value was not allowed")
 		  end try
 		  
 		  try
-		    o.HandleValue("z")
+		    parser.Parse "-a z"
 		    Assert.Fail("Value not on allowed list was allowed")
 		  catch err as OptionParserException
 		    Assert.Pass("Value not on allowed list not allowed")
@@ -48,12 +50,12 @@ Inherits TestGroup
 		Sub ArrayTest()
 		  Dim o As New Option("a", "array", "Array of Integers", Option.OptionType.Integer)
 		  o.IsArray = True
+		  dim parser as new OptionParser
+		  parser.AddOption o
 		  
-		  o.HandleValue("1")
-		  o.HandleValue("5")
-		  o.HandleValue("1029")
+		  parser.Parse "-a 1 -a 5 -a 1029"
 		  
-		  Dim v() As Variant = o.Value
+		  Dim v() As Variant = parser.OptionValue("a").Value
 		  Assert.AreEqual(1, v(0).IntegerValue)
 		  Assert.AreEqual(5, v(1).IntegerValue)
 		  Assert.AreEqual(1029, v(2).IntegerValue)
@@ -79,20 +81,24 @@ Inherits TestGroup
 		  Dim o As Option
 		  
 		  o = New Option("t", "test", "Unit Testing", Option.OptionType.Boolean)
-		  o.HandleValue("Yes")
-		  Assert.IsTrue(o.Value, "Yes")
+		  dim parser as new OptionParser
+		  parser.AddOption o
 		  
-		  o.HandleValue("YES")
-		  Assert.IsTrue(o.Value, "YES")
+		  parser.Parse "-t=Yes"
+		  Assert.IsTrue(parser.BooleanValue("t"), "Yes")
 		  
-		  o.HandleValue("y")
-		  Assert.IsTrue(o.Value, "y")
+		  parser.Parse "-t=YES"
+		  Assert.IsTrue(parser.BooleanValue("t"), "YES")
 		  
-		  o.HandleValue("1")
-		  Assert.IsTrue(o.Value, "1")
+		  parser.Parse "-t=y"
+		  Assert.IsTrue(parser.BooleanValue("t"), "y")
 		  
-		  o.HandleValue("on")
-		  Assert.IsTrue(o.Value, "on")
+		  parser.Parse "-t=1"
+		  Assert.IsTrue(parser.BooleanValue("t"), "1")
+		  
+		  parser.Parse "-t=on"
+		  Assert.IsTrue(parser.BooleanValue("t"), "on")
+		  
 		End Sub
 	#tag EndMethod
 
@@ -100,17 +106,19 @@ Inherits TestGroup
 		Sub DisallowedValueTest()
 		  dim o as new Option("a", "", "")
 		  o.AddDisallowedValue("a", "b")
+		  dim parser as new OptionParser
+		  parser.AddOption o
 		  
 		  #pragma BreakOnExceptions false
 		  try
-		    o.HandleValue("a")
+		    parser.Parse "-a=a"
 		    Assert.Fail("Disallowed value allowed")
 		  catch err as OptionParserException
 		    Assert.Pass("Disallowed value was not allowed")
 		  end try
 		  
 		  try
-		    o.HandleValue("z")
+		    parser.Parse "-a=z"
 		    Assert.Pass("Value not on disallowed list was allowed")
 		  catch err as OptionParserException
 		    Assert.Fail("Value not on disallowed list not allowed")
@@ -122,17 +130,18 @@ Inherits TestGroup
 
 	#tag Method, Flags = &h0
 		Sub IntegerHandleValueTest()
-		  Dim o As Option
+		  Dim o As New Option("t", "test", "Unit Testing", Option.OptionType.Integer)
+		  dim parser as new OptionParser
+		  parser.AddOption o
 		  
-		  o = New Option("t", "test", "Unit Testing", Option.OptionType.Integer)
-		  o.HandleValue("")
-		  Assert.IsTrue(o.Value = 0)
+		  parser.Parse "-t="
+		  Assert.IsTrue(parser.IntegerValue("t") = 0)
 		  
-		  o.HandleValue("1")
-		  Assert.IsTrue(o.Value = 1)
+		  parser.Parse "-t=1"
+		  Assert.IsTrue(parser.IntegerValue("t") = 1)
 		  
-		  o.HandleValue("10293")
-		  Assert.IsTrue(o.Value = 10293)
+		  parser.Parse "-t 10293"
+		  Assert.IsTrue(parser.IntegerValue("t") = 10293)
 		  
 		End Sub
 	#tag EndMethod

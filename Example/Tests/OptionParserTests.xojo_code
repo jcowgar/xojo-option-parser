@@ -2,6 +2,22 @@
 Protected Class OptionParserTests
 Inherits TestGroup
 	#tag Method, Flags = &h0
+		Sub BadArgumentTest()
+		  dim parser as new OptionParser
+		  
+		  #pragma BreakOnExceptions false
+		  try
+		    parser.Parse "-a"
+		    Assert.Fail "Switch '-a' should have failed"
+		  catch err as OptionUnrecognizedKeyException
+		    Assert.Pass "Switch '-a' failed as expected"
+		  end try
+		  #pragma BreakOnExceptions default
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub FirstArgumentTest()
 		  dim parser as new OptionParser
 		  parser.AddOption new Option("", "test", "Tester", Option.OptionType.Boolean)
@@ -298,6 +314,11 @@ Inherits TestGroup
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="Duration"
+			Group="Behavior"
+			Type="Double"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="FailedTestCount"
 			Group="Behavior"

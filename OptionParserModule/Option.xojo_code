@@ -1,5 +1,6 @@
 #tag Class
 Class Option
+Implements ParserOption
 	#tag Method, Flags = &h0
 		Sub AddAllowedValue(ParamArray values() As String)
 		  if AllowedValues.Ubound <> -1 then
@@ -154,10 +155,10 @@ Class Option
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub HandleValue(value As String)
+	#tag Method, Flags = &h21
+		Private Sub HandleValue(value As String)
 		  //
-		  // For internal `OptionParser` use.
+		  // For internal `OptionParser` use through ParserOption Interface
 		  //
 		  // Handles converting the `String` representation of an option as supplied
 		  // by the user to the actual `OptionType`, for example, converts a `String`

@@ -678,7 +678,7 @@ Class OptionParser
 		      value = args(optIdx)
 		    End If
 		    
-		    opt.HandleValue(value)
+		    OptionParserModule.ParserOption(opt).HandleValue(value)
 		    
 		    if HelpRequested then
 		      //

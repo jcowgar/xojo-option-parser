@@ -12,6 +12,7 @@ Class=OptionInvalidKeyValueException;../OptionParserModule/OptionInvalidKeyValue
 Class=OptionMissingKeyException;../OptionParserModule/OptionMissingKeyException.xojo_code;&h44C7F771;&h25C327FF;false
 Class=OptionParserException;../OptionParserModule/OptionParserException.xojo_code;&h5CB2B525;&h25C327FF;false
 Class=OptionUnrecognizedKeyException;../OptionParserModule/OptionUnrecognizedKeyException.xojo_code;&h12104F75;&h25C327FF;false
+Interface=ParserOption;../OptionParserModule/ParserOption.xojo_code;&h5838B7FF;&h25C327FF;false
 DefaultWindow=Window1
 AppMenuBar=MainMenuBar
 MajorVersion=1

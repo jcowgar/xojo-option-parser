@@ -238,14 +238,12 @@ Implements ParserOption
 		  End Select
 		  
 		  If Self.IsArray Then
-		    If Not Self.WasSet Then
-		      Self.Value = Array(newValue)
-		      
-		    Else
-		      Dim ary() As Variant = Self.Value
-		      ary.Append newValue
-		      Self.Value = ary
+		    dim ary() as variant
+		    If Self.WasSet Then
+		      ary = self.Value
 		    End If
+		    ary.Append newValue
+		    self.Value = ary
 		    
 		  Else
 		    Self.Value = newValue

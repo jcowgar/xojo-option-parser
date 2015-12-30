@@ -34,7 +34,9 @@ Inherits TestGroup
 		  catch err as OptionParserException
 		    Assert.Fail("Allowed value was not allowed")
 		  end try
+		  #pragma BreakOnExceptions default
 		  
+		  #pragma BreakOnExceptions false
 		  try
 		    parser.Parse "-a z"
 		    Assert.Fail("Value not on allowed list was allowed")
@@ -60,6 +62,18 @@ Inherits TestGroup
 		  Assert.AreEqual(5, v(1).IntegerValue)
 		  Assert.AreEqual(1029, v(2).IntegerValue)
 		  
+		  o = New Option("i", "ii", "Hello World")
+		  o.IsArray = True
+		  
+		  parser = new OptionParser
+		  parser.AddOption o
+		  
+		  parser.Parse "-i john --ii jim -i jack"
+		  v = parser.OptionValue("i").Value
+		  
+		  Assert.AreEqual("john", v(0).StringValue)
+		  Assert.AreEqual("jim", v(1).StringValue)
+		  Assert.AreEqual("jack", v(2).StringValue)
 		End Sub
 	#tag EndMethod
 
@@ -146,8 +160,103 @@ Inherits TestGroup
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Sub KeyValidationTest()
+		  // Ensure that bad keys are not accepted
+		  
+		  dim o as Option
+		  
+		  try
+		    #pragma BreakOnExceptions off
+		    o = new Option("", "", "No key values")
+		    #pragma BreakOnExceptions default
+		    ErrorIf true, o.Description.ToText + " should not be allowed"
+		  catch err as OptionParserException
+		    //
+		    // Good
+		    //
+		  end try
+		  
+		  try
+		    #pragma BreakOnExceptions off
+		    o = new Option("aa", "", "Multiple letters in short key")
+		    #pragma BreakOnExceptions default
+		    ErrorIf true, o.Description.ToText + " should not be allowed"
+		  catch err as OptionParserException
+		    //
+		    // Good
+		    //
+		  end try
+		  
+		  try
+		    #pragma BreakOnExceptions off
+		    o = new Option("", "a", "Single letter in long key")
+		    #pragma BreakOnExceptions default
+		    ErrorIf true, o.Description.ToText + " should not be allowed"
+		  catch err as OptionParserException
+		    //
+		    // Good
+		    //
+		  end try
+		  
+		  try
+		    #pragma BreakOnExceptions off
+		    o = new Option("", "a b", "Space in key")
+		    #pragma BreakOnExceptions default
+		    ErrorIf true, o.Description.ToText + " should not be allowed"
+		  catch err as OptionParserException
+		    //
+		    // Good
+		    //
+		  end try
+		  
+		  //
+		  // Hyphens in a key is fine
+		  //
+		  o = new Option("", "--switch", "Key with hyphens")
+		  Assert.AreEqual("switch", o.LongKey)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub ValueFromPathTest()
+		  const kData = "some data"
+		  
+		  dim f as FolderItem = GetTemporaryFolderItem
+		  dim tos as TextOutputStream = TextOutputStream.Create(f)
+		  tos.Write kData
+		  tos.Close
+		  tos = nil
+		  
+		  dim arr() as string = array("--from-file", "@" + f.NativePath)
+		  
+		  dim o as new Option("", "from-file", "", Option.OptionType.String)
+		  o.CanReadValueFromPath = true
+		  
+		  dim parser as new OptionParser
+		  parser.AddOption o
+		  
+		  parser.Parse arr, false
+		  Assert.AreEqual kData, parser.StringValue("from-file"), "Didn't read from file"
+		  
+		  o.CanReadValueFromPath = false
+		  parser.Parse arr, false
+		  Assert.AreEqual "@" + f.NativePath, parser.StringValue("from-file")
+		  
+		  Finally
+		    if f isa FolderItem and f.Exists then
+		      f.Delete
+		    end if
+		End Sub
+	#tag EndMethod
+
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="Duration"
+			Group="Behavior"
+			Type="Double"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="FailedTestCount"
 			Group="Behavior"

@@ -18,6 +18,69 @@ Inherits TestGroup
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub BooleanWithValueTest()
+		  Dim parser As New OptionParser("app", "desc")
+		  
+		  parser.AddOption New Option("a", "all", "All setting", Option.OptionType.Boolean)
+		  
+		  for each on as String in Array("Yes", "Y", "On", "True", "T", "1")
+		    parser.Parse("--all=" + on)
+		    Assert.IsTrue(parser.BooleanValue("all"))
+		  next
+		  
+		  for each off as String in Array("No", "N", "Off", "False", "F", "0")
+		    parser.Parse("--all=" + off)
+		    Assert.IsFalse(parser.BooleanValue("all"))
+		  next
+		  
+		  //
+		  // Try an invalid value
+		  //
+		  
+		  #pragma BreakOnExceptions off
+		  
+		  parser = new OptionParser
+		  try
+		    parser.Parse("--all=John")
+		    Assert.Fail("--all=John was not detected as an invalid option value")
+		  catch err as RuntimeException
+		    if err isa EndException or err isa ThreadEndException then
+		      raise err
+		    end if
+		    
+		    Assert.Pass("--all=John was detected as an invalid option value")
+		  end try
+		  
+		  #pragma BreakOnExceptions default
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub ComplexStringParseTest()
+		  Dim o As New OptionParser("app", "desc")
+		  
+		  Assert.AreEqual("app", o.AppName)
+		  Assert.AreEqual("desc", o.AppDescription)
+		  
+		  o.AddOption New Option("a", "abc", "ABC setting")
+		  o.AddOption New Option("b", "bcd", "BCD setting", Option.OptionType.Boolean)
+		  o.AddOption New Option("c", "cde", "CDE setting", Option.OptionType.Boolean)
+		  
+		  o.Parse("-a ""John Doe -b"" -c")
+		  
+		  Assert.AreEqual("John Doe -b", o.StringValue("abc"))
+		  Assert.IsFalse(o.BooleanValue("bcd"))
+		  Assert.IsTrue(o.BooleanValue("cde"))
+		  
+		  Assert.IsTrue(o.OptionValue("abc").WasSet)
+		  Assert.IsFalse(o.OptionValue("bcd").WasSet)
+		  Assert.IsTrue(o.OptionValue("cde").WasSet)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub FirstArgumentTest()
 		  dim parser as new OptionParser
 		  parser.AddOption new Option("", "test", "Tester", Option.OptionType.Boolean)
@@ -175,6 +238,31 @@ Inherits TestGroup
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub SimpleStringParseTest()
+		  Dim o As New OptionParser("app", "desc")
+		  
+		  Assert.AreEqual("app", o.AppName)
+		  Assert.AreEqual("desc", o.AppDescription)
+		  
+		  o.AddOption New Option("a", "abc", "ABC setting")
+		  o.AddOption New Option("b", "bcd", "BCD setting", Option.OptionType.Boolean)
+		  o.AddOption New Option("c", "cde", "CDE setting", Option.OptionType.Boolean)
+		  
+		  o.Parse("-a JOHN -b")
+		  
+		  Assert.AreEqual("JOHN", o.StringValue("abc"))
+		  Assert.IsTrue(o.BooleanValue("bcd"))
+		  Assert.IsFalse(o.BooleanValue("cde"))
+		  Assert.IsTrue(o.BooleanValue("cde", True))
+		  
+		  Assert.IsTrue(o.OptionValue("abc").WasSet)
+		  Assert.IsTrue(o.OptionValue("bcd").WasSet)
+		  Assert.IsFalse(o.OptionValue("cde").WasSet)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub SimpleTest()
 		  Dim o As New OptionParser("app", "desc")
 		  
@@ -233,10 +321,13 @@ Inherits TestGroup
 		  #Pragma BreakOnExceptions False
 		  Try
 		    o.Parse(Array("--date=john"), false)
-		  Catch RuntimeException
+		  Catch err as RuntimeException
+		    if err isa EndException or err isa ThreadEndException then
+		      raise err
+		    end if
 		    caughtError = True
 		  End Try
-		  #Pragma BreakOnExceptions True
+		  #Pragma BreakOnExceptions default
 		  
 		  Assert.IsTrue(caughtError, "did date validation fail?")
 		  
@@ -251,10 +342,13 @@ Inherits TestGroup
 		  #Pragma BreakOnExceptions False
 		  Try
 		    o.Parse(Array("--int=3"), false)
-		  Catch RuntimeException
+		  Catch err as RuntimeException
+		    if err isa EndException or err isa ThreadEndException then
+		      raise err
+		    end if
 		    caughtError = True
 		  End Try
-		  #Pragma BreakOnExceptions True
+		  #Pragma BreakOnExceptions default
 		  
 		  Assert.IsTrue(caughtError, "did integer validation fail?")
 		  
@@ -263,10 +357,13 @@ Inherits TestGroup
 		  #Pragma BreakOnExceptions False
 		  Try
 		    o.AddOption New Option("", "", "no keys", Option.OptionType.Boolean)
-		  Catch
+		  Catch err as RuntimeException
+		    if err isa EndException or err isa ThreadEndException then
+		      raise err
+		    end if
 		    caughtError = True
 		  End Try
-		  #Pragma BreakOnExceptions True
+		  #Pragma BreakOnExceptions default
 		  
 		  Assert.IsTrue(caughtError, "supplying no keys did not fail.")
 		  

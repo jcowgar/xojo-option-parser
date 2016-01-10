@@ -864,20 +864,25 @@ Class OptionParser
 
 	#tag Method, Flags = &h21
 		Private Sub RaiseInvalidKeyValueException(key As String, type As String)
-		  Raise New OptionInvalidKeyValueException("Invalid key value: " + KeyWithDashes(key) + " (" + type + ")")
+		  dim err as New OptionInvalidKeyValueException("Invalid key value: " + KeyWithDashes(key) + " (" + type + ")")
+		  raise err
+		  
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
 		Private Sub RaiseMissingKeyException(key As String)
+		  dim err as New OptionMissingKeyException("Missing option: " + KeyWithDashes(key))
+		  raise err
 		  
-		  Raise New OptionMissingKeyException("Missing option: " + KeyWithDashes(key))
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
 		Private Sub RaiseUnrecognizedKeyException(key As String)
-		  Raise New OptionUnrecognizedKeyException("Unrecognized key: " + KeyWithDashes(key))
+		  dim err as New OptionUnrecognizedKeyException("Unrecognized key: " + KeyWithDashes(key))
+		  raise err
+		  
 		End Sub
 	#tag EndMethod
 

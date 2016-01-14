@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<RBProject version="2015r2.3" FormatVersion="2" MinIDEVersion="20070100">
+<RBProject version="2015r3.1" FormatVersion="2" MinIDEVersion="20070100">
 <block type="Module" ID="634229026">
  <ObjName>OptionParser</ObjName>
- <ObjContainerID>1881215597</ObjContainerID>
+ <ObjContainerID>519440383</ObjContainerID>
  <IsClass>1</IsClass>
  <ItemFlags>1</ItemFlags>
  <IsInterface>0</IsInterface>
@@ -862,7 +862,7 @@
    <SourceLine>If AppDescription &lt;&gt; "" Then</SourceLine>
    <SourceLine>helpFor = kIndentPrefix + helpFor + " - " + AppDescription</SourceLine>
    <SourceLine>End If</SourceLine>
-   <SourceLine>helpLines.Append helpFor</SourceLine>
+   <SourceLine>helpLines.Append WrapTextWithIndent(helpFor, kLineLength)</SourceLine>
    <SourceLine>helpLines.Append ""</SourceLine>
    <SourceLine>End If</SourceLine>
    <SourceLine></SourceLine>

@@ -102,7 +102,7 @@ Implements UnitTestOptionParser
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetHasGUI)
-		 Shared Function CommandLineArgs() As String()
+		Shared Function CommandLineArgs() As String()
 		  // Return an array of command-line arguments
 		  
 		  const kDebugDeclares = false
@@ -133,10 +133,16 @@ Implements UnitTestOptionParser
 		      args.Append s
 		    next
 		    
-		  #elseif TargetWin32 then
+		  #elseif TargetWindows then
 		    //
 		    // Windows and Linux code from Thomas Tempelmann
 		    //
+		    
+		    #if Target64Bit then
+		      const kPtrSize as integer = 8
+		    #elseif Target32Bit then
+		      const kPtrSize as integer = 4
+		    #endif
 		    
 		    declare function GetCommandLineW lib "kernel32.dll" () as Ptr
 		    declare function CommandLineToArgvW lib "shell32.dll" (lpCmdLine As Ptr, ByRef pNumArgs As Integer) As Ptr
@@ -144,15 +150,15 @@ Implements UnitTestOptionParser
 		    
 		    dim cl as Ptr = GetCommandLineW()
 		    dim n as Integer
-		    dim argList as Ptr = CommandLineToArgvW (cl, n)
+		    dim argList as Ptr = CommandLineToArgvW(cl, n)
 		    for idx as Integer = 0 to n-1
-		      dim mb as MemoryBlock = argList.Ptr(idx*4)
+		      dim mb as MemoryBlock = argList.Ptr(idx * kPtrSize)
 		      // mb points to a UTF16 0-terminated string. It seems we have to scan its length ourselves now.
 		      dim len as Integer
 		      while mb.UInt16Value(len) <> 0
 		        len = len + 2
 		      wend
-		      dim s as String = mb.StringValue(0,len).DefineEncoding(Encodings.UTF16)
+		      dim s as String = mb.StringValue(0, len).DefineEncoding(Encodings.UTF16)
 		      s = s.ConvertEncoding(Encodings.UTF8)
 		      args.Append s
 		    next
@@ -361,7 +367,7 @@ Implements UnitTestOptionParser
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		 Shared Function GetRelativeFolderItem(path As String, relativeTo As FolderItem = Nil) As FolderItem
+		Shared Function GetRelativeFolderItem(path As String, relativeTo As FolderItem = Nil) As FolderItem
 		  Dim prefix As String = ""
 		  
 		  #If TargetWin32 Then
@@ -905,7 +911,7 @@ Implements UnitTestOptionParser
 		  
 		  Dim desiredLenB As Integer = LenB(s) * repeatCount
 		  dim output as String = s
-		  dim cutoff as Integer = (desiredLenB+1)\2
+		  dim cutoff as Integer = (desiredLenB + 1)\2
 		  dim curLenB as Integer = LenB(output)
 		  
 		  while curLenB < cutoff

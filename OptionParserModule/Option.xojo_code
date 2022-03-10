@@ -3,7 +3,7 @@ Class Option
 Implements ParserOption
 	#tag Method, Flags = &h0
 		Sub AddAllowedValue(ParamArray values() As String)
-		  if AllowedValues.Ubound <> -1 then
+		  if DisallowedValues.Ubound <> -1 then
 		    raise new OptionParserException("You cannot set both allowed values and disallowed values")
 		  end if
 		  

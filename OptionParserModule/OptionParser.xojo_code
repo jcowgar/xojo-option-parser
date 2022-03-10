@@ -1025,11 +1025,13 @@ Class OptionParser
 		    helpLines.Append ""
 		  End If
 		  
-		  Dim help As String = Join(helpLines, EndOfLine)
-		  
 		  #If TargetConsole Then
-		    Print help
+		    for row as integer = 0 to helpLines.Ubound
+		      StdOut.WriteLine helpLines(row)
+		      StdOut.Flush
+		    next row
 		  #ElseIf TargetDesktop Then
+		    Dim help As String = Join(helpLines, EndOfLine)
 		    MsgBox help
 		  #Else
 		    #Pragma Warning "How to print help?"

@@ -1,5 +1,6 @@
 #tag Class
 Class OptionParser
+Implements UnitTestOptionParser
 	#tag Method, Flags = &h0
 		Sub AddOption(o As Option)
 		  // Add an option to the parser.

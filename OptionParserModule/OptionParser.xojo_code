@@ -891,10 +891,9 @@ Class OptionParser
 		  // Concatenate a string to itself 'repeatCount' times.
 		  // Example: Repeat("spam ", 5) = "spam spam spam spam spam ".
 		  
-		  #pragma disablebackgroundTasks
-		  
 		  if repeatCount <= 0 then return ""
 		  if repeatCount = 1 then return s
+		  if s = "" then return s
 		  
 		  // Implementation note: normally, you don't want to use string concatenation
 		  // for something like this, since that creates a new string on each operation.

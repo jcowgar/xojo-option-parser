@@ -1,5 +1,6 @@
 #tag Class
 Class OptionParser
+Implements UnitTestOptionParser
 	#tag Method, Flags = &h0
 		Sub AddOption(o As Option)
 		  // Add an option to the parser.
@@ -101,7 +102,7 @@ Class OptionParser
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetHasGUI)
-		 Shared Function CommandLineArgs() As String()
+		Shared Function CommandLineArgs() As String()
 		  // Return an array of command-line arguments
 		  
 		  const kDebugDeclares = false
@@ -132,10 +133,16 @@ Class OptionParser
 		      args.Append s
 		    next
 		    
-		  #elseif TargetWin32 then
+		  #elseif TargetWindows then
 		    //
 		    // Windows and Linux code from Thomas Tempelmann
 		    //
+		    
+		    #if Target64Bit then
+		      const kPtrSize as integer = 8
+		    #elseif Target32Bit then
+		      const kPtrSize as integer = 4
+		    #endif
 		    
 		    declare function GetCommandLineW lib "kernel32.dll" () as Ptr
 		    declare function CommandLineToArgvW lib "shell32.dll" (lpCmdLine As Ptr, ByRef pNumArgs As Integer) As Ptr
@@ -143,15 +150,15 @@ Class OptionParser
 		    
 		    dim cl as Ptr = GetCommandLineW()
 		    dim n as Integer
-		    dim argList as Ptr = CommandLineToArgvW (cl, n)
+		    dim argList as Ptr = CommandLineToArgvW(cl, n)
 		    for idx as Integer = 0 to n-1
-		      dim mb as MemoryBlock = argList.Ptr(idx*4)
+		      dim mb as MemoryBlock = argList.Ptr(idx * kPtrSize)
 		      // mb points to a UTF16 0-terminated string. It seems we have to scan its length ourselves now.
 		      dim len as Integer
 		      while mb.UInt16Value(len) <> 0
 		        len = len + 2
 		      wend
-		      dim s as String = mb.StringValue(0,len).DefineEncoding(Encodings.UTF16)
+		      dim s as String = mb.StringValue(0, len).DefineEncoding(Encodings.UTF16)
 		      s = s.ConvertEncoding(Encodings.UTF8)
 		      args.Append s
 		    next
@@ -360,7 +367,7 @@ Class OptionParser
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		 Shared Function GetRelativeFolderItem(path As String, relativeTo As FolderItem = Nil) As FolderItem
+		Shared Function GetRelativeFolderItem(path As String, relativeTo As FolderItem = Nil) As FolderItem
 		  Dim prefix As String = ""
 		  
 		  #If TargetWin32 Then
@@ -891,10 +898,9 @@ Class OptionParser
 		  // Concatenate a string to itself 'repeatCount' times.
 		  // Example: Repeat("spam ", 5) = "spam spam spam spam spam ".
 		  
-		  #pragma disablebackgroundTasks
-		  
 		  if repeatCount <= 0 then return ""
 		  if repeatCount = 1 then return s
+		  if s = "" then return s
 		  
 		  // Implementation note: normally, you don't want to use string concatenation
 		  // for something like this, since that creates a new string on each operation.
@@ -905,7 +911,7 @@ Class OptionParser
 		  
 		  Dim desiredLenB As Integer = LenB(s) * repeatCount
 		  dim output as String = s
-		  dim cutoff as Integer = (desiredLenB+1)\2
+		  dim cutoff as Integer = (desiredLenB + 1)\2
 		  dim curLenB as Integer = LenB(output)
 		  
 		  while curLenB < cutoff
@@ -1025,11 +1031,13 @@ Class OptionParser
 		    helpLines.Append ""
 		  End If
 		  
-		  Dim help As String = Join(helpLines, EndOfLine)
-		  
 		  #If TargetConsole Then
-		    Print help
+		    for row as integer = 0 to helpLines.Ubound
+		      StdOut.WriteLine helpLines(row)
+		      StdOut.Flush
+		    next row
 		  #ElseIf TargetDesktop Then
+		    Dim help As String = Join(helpLines, EndOfLine)
 		    MsgBox help
 		  #Else
 		    #Pragma Warning "How to print help?"
@@ -1338,32 +1346,43 @@ Class OptionParser
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="AdditionalHelpNotes"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="AppDescription"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="AppName"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="ExtrasRequired"
+			Visible=false
 			Group="Behavior"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="HelpRequested"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Boolean"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
@@ -1371,6 +1390,7 @@ Class OptionParser
 			Group="ID"
 			InitialValue="-2147483648"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Left"
@@ -1378,18 +1398,23 @@ Class OptionParser
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Super"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Top"
@@ -1397,6 +1422,7 @@ Class OptionParser
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

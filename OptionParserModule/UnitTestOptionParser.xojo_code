@@ -1,21 +1,13 @@
 #tag Interface
-Private Interface ParserOption
+Protected Interface UnitTestOptionParser
 	#tag Method, Flags = &h0
-		Sub HandleValue(value As String)
+		Function Repeat(s As String, length As Integer) As String
 		  
-		End Sub
+		End Function
 	#tag EndMethod
 
 
 	#tag ViewBehavior
-		#tag ViewProperty
-			Name="Name"
-			Visible=true
-			Group="ID"
-			InitialValue=""
-			Type="String"
-			EditorType=""
-		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
 			Visible=true
@@ -25,7 +17,15 @@ Private Interface ParserOption
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="Super"
+			Name="Left"
+			Visible=true
+			Group="Position"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Name"
 			Visible=true
 			Group="ID"
 			InitialValue=""
@@ -33,11 +33,11 @@ Private Interface ParserOption
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="Left"
+			Name="Super"
 			Visible=true
-			Group="Position"
-			InitialValue="0"
-			Type="Integer"
+			Group="ID"
+			InitialValue=""
+			Type="String"
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty

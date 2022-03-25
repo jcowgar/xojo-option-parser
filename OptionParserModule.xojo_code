@@ -1,6 +1,6 @@
 #tag Module
 Protected Module OptionParserModule
-	#tag Constant, Name = kVersion, Type = Double, Dynamic = False, Default = \"2.0", Scope = Protected
+	#tag Constant, Name = kVersion, Type = Double, Dynamic = False, Default = \"2.0.1", Scope = Protected
 	#tag EndConstant
 
 
